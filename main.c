@@ -18,32 +18,52 @@ void printPiece(unsigned char piece);
 void initBoard(unsigned char board[8][8]);
 void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char posYstart, unsigned char posXend, unsigned char posYend);
 void promptMove(unsigned char board[8][8], unsigned char turn);
+unsigned char charToCord(char ch);
 
 int main() {
-
 
     unsigned char turn = 0; //0 => white's turn, 1 => black's turn
 
     unsigned char board[8][8];
     initBoard(&board[0][0]);
-    
+
     while(1) {
         system("clear");
         printBoard(&board[0][0]);
         promptMove(&board[0][0], turn);
         turn++;
     }
-    
      
 }
 
+unsigned char charToCord(char ch) {
+    if(ch<'A') {            //ASCII for numericals are lower than 'A'
+        return 8-(ch-48);   // 8-ch-48
+    } else if (ch<'a') {    //ASCII for lower case letters are lower than 'a'
+        return ch-65;
+    } else return ch-97;
+}
+
 void promptMove(unsigned char board[8][8], unsigned char turn) {
-    if(turn%2) printf("It's black's turn. Make your move (startX startY endX endY):");
-    else printf("It's white's turn. Make your move (startX startY endX endY):");
-    unsigned char startX, startY, endX, endY;
-    scanf("%hhx %hhx %hhx %hhx", &startX, &startY, &endX, &endY);
-    //printf("startX: %d, startY: %d, endX: %d, endY: %d\n", startX, startY, endX, endY);
-    movePiece(&board[0][0], startX, startY, endX, endY);
+    unsigned char j;
+        if(turn%2) printf("It's black's turn. Make your move.");
+        else printf("It's white's turn. Make your move.");
+
+        char input[8];
+        scanf("%7[^\n]%*c", input);
+
+        unsigned char pos[4];
+
+        j = 0;
+        for(unsigned char i = 0; i<5; i++) {
+            unsigned char tmp = charToCord(input[i]);
+            if(tmp<8) {
+                pos[j] = tmp;
+                j++;
+            }
+        }
+        printf("pos1: %hhx, pos2: %hhx, pos3: %hhx, pos4: %hhx\n", pos[0], pos[1], pos[2], pos[3]);
+        movePiece(&board[0][0], pos[0], pos[1], pos[2], pos[3]);
 }
 
 void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char posYstart, unsigned char posXend, unsigned char posYend) {
@@ -54,15 +74,17 @@ void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char
 }
 
 void printBoard(unsigned char board[8][8]) {
-    printf("%s", "-------------------------\n");
+    printf("%s", "-------------------------------\n\n");
         for(int i = 0; i<8; i++) {
+            printf("%d  ", 8-i);
             for(int j = 0; j<8; j++) {
             printf(" ");
             printPiece(board[j][i]);
             }
             printf("\n");
         }
-    printf("-------------------------\n");
+    printf("\n    A  B  C  D  E  F  G  H\n");
+    printf("-------------------------------\n");
 }
 
 void printPiece(unsigned char piece) {
