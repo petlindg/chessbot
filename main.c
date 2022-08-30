@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
 Pawn = X001
@@ -12,18 +13,44 @@ Black = 1XXX
 Empty = XXX0
 */
 
-enum pos{fst, snd};
-
 void printBoard(unsigned char board[8][8]);
 void printPiece(unsigned char piece);
 void initBoard(unsigned char board[8][8]);
-//void movePiece(unsigned char *board, unsigned char start, enum pos startPos, unsigned char end, enum pos endPos);
+void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char posYstart, unsigned char posXend, unsigned char posYend);
+void promptMove(unsigned char board[8][8], unsigned char turn);
 
 int main() {
+
+
+    unsigned char turn = 0; //0 => white's turn, 1 => black's turn
+
     unsigned char board[8][8];
-    initBoard(&board[0]);
-    printBoard(&board[0]);
+    initBoard(&board[0][0]);
     
+    while(1) {
+        system("clear");
+        printBoard(&board[0][0]);
+        promptMove(&board[0][0], turn);
+        turn++;
+    }
+    
+     
+}
+
+void promptMove(unsigned char board[8][8], unsigned char turn) {
+    if(turn%2) printf("It's black's turn. Make your move (startX startY endX endY):");
+    else printf("It's white's turn. Make your move (startX startY endX endY):");
+    unsigned char startX, startY, endX, endY;
+    scanf("%hhx %hhx %hhx %hhx", &startX, &startY, &endX, &endY);
+    //printf("startX: %d, startY: %d, endX: %d, endY: %d\n", startX, startY, endX, endY);
+    movePiece(&board[0][0], startX, startY, endX, endY);
+}
+
+void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char posYstart, unsigned char posXend, unsigned char posYend) {
+    board[posXend][posYend]=board[posXstart][posYstart];
+    board[posXstart][posYstart] = 0;
+    //printf("%d %d %d %d", posXstart, posYstart, posXend, posYend);
+    //printPiece(board[posXend][posYend]);
 }
 
 void printBoard(unsigned char board[8][8]) {
