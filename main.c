@@ -29,6 +29,7 @@ int main() {
 
     while(1) {
         system("clear");
+        system("cls");
         printBoard(&board[0][0]);
         promptMove(&board[0][0], turn);
         turn++;
