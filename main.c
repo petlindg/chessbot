@@ -63,15 +63,12 @@ void promptMove(unsigned char board[8][8], unsigned char turn) {
                 j++;
             }
         }
-        printf("pos1: %hhx, pos2: %hhx, pos3: %hhx, pos4: %hhx\n", pos[0], pos[1], pos[2], pos[3]);
         movePiece(&board[0][0], pos[0], pos[1], pos[2], pos[3]);
 }
 
 void movePiece(unsigned char board[8][8], unsigned char posXstart, unsigned char posYstart, unsigned char posXend, unsigned char posYend) {
     board[posXend][posYend]=board[posXstart][posYstart];
     board[posXstart][posYstart] = 0;
-    //printf("%d %d %d %d", posXstart, posYstart, posXend, posYend);
-    //printPiece(board[posXend][posYend]);
 }
 
 void printBoard(unsigned char board[8][8]) {
