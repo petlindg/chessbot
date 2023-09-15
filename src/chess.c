@@ -48,3 +48,4 @@ void initBoard(Piece board[8][8]) {
     initPiece(&board[7][0], ROOK, WHITE);
     return;
 }
+
