@@ -10,7 +10,13 @@
 int main(){
     Piece board[8][8];
     initBoard(board);
+
     printBoard(board);
-    if(isCheck(board, WHITE)) printf("white in check\n");
-    if(isCheck(board, BLACK)) printf("black in check\n");
+    printf("0\n");
+    Move* moves;
+    int size = getMoves(board, WHITE, moves);
+    printf("Size: %d\n", size);
+    printMoves(moves, size);
+
+
 }

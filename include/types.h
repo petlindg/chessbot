@@ -6,7 +6,7 @@ typedef enum PieceTypes {
 } PieceType;
 
 typedef enum Colors {
-    WHITE, BLACK
+    NONE, WHITE, BLACK
 } Color;
 
 typedef enum Squares {

@@ -1,5 +1,6 @@
 #include "types.h"
 #include "interface.h"
+#include "chess.h"
 #include <stdio.h>
 
 void printPiece(Piece* piece) {
@@ -58,12 +59,24 @@ void printBoard(Piece board[8][8]) {
     printf("-------------------------------\n\n");
         for(int i=7; i>=0; i--) {
             printf("%d  ", i+1);
-            for(int j=7; j>=0; j--) {
-            printf(" ");
-            printPiece(&board[j][i]);
+                for(int j=0; j<8; j++) {
+                printf(" ");
+                printPiece(&board[j][i]);
             }
             printf("\n");
         }
     printf("\n    A  B  C  D  E  F  G  H\n");
     printf("-------------------------------\n");
+}
+
+void printMoves(Move* moves, int size) {
+    int x1, y1, x2, y2;
+    Square squareFrom;
+    Square squareTo;
+    for(int i=0; i<size; i++) {
+        squareToInt(squareFrom, &x1, &y1);
+        squareToInt(squareTo, &x2, &y2);
+        printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
+    }
+    return;
 }
