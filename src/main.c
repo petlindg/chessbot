@@ -9,14 +9,12 @@
 
 int main(){
     Piece board[8][8];
-    initBoard(board);
-
+    initTestBoard2(board);
     printBoard(board);
-    printf("0\n");
     Move* moves;
-    int size = getMoves(board, WHITE, moves);
+    int size = getMoves(board, WHITE, &moves);
     printf("Size: %d\n", size);
     printMoves(moves, size);
-
+    free(moves);
 
 }

@@ -54,6 +54,53 @@ void initBoard(Piece board[8][8]) {
     return;
 }
 
+void initTestBoard1(Piece board[8][8]) {
+    for(int i=0; i<8; i++) {
+        for(int j=0; j<8; j++) {
+            initPiece_Empty(&board[i][j]);
+        }
+    }
+    
+    // Initialize black pieces on rank 7 (line 8)
+    initPiece(&board[1][7], KING, BLACK);
+    initPiece(&board[3][7], PAWN, BLACK);
+    initPiece(&board[6][7], BISHOP, BLACK);
+    
+    // Initialize black pieces on rank 6 (line 7)
+    initPiece(&board[0][6], ROOK, BLACK);
+    initPiece(&board[4][6], QUEEN, BLACK);
+    
+    // Initialize black pieces on rank 5 (line 6)
+    initPiece(&board[2][5], KNIGHT, BLACK);
+    
+    // Initialize black pieces on rank 4 (line 5)
+    initPiece(&board[7][4], ROOK, BLACK);
+    initPiece(&board[5][4], PAWN, BLACK);
+    
+    // Initialize white pieces on rank 3 (line 4)
+    initPiece(&board[3][3], BISHOP, WHITE);
+    
+    // Initialize white pieces on rank 2 (line 3)
+    initPiece(&board[1][2], KING, WHITE);
+    
+    // Initialize white pieces on rank 1 (line 2)
+    initPiece(&board[7][1], QUEEN, WHITE);
+    initPiece(&board[4][1], KNIGHT, WHITE);
+    
+    // Initialize white pieces on rank 0 (line 1)
+    initPiece(&board[2][0], PAWN, WHITE);
+    initPiece(&board[6][0], ROOK, WHITE);
+}
+
+void initTestBoard2(Piece board[8][8]) {
+    for(int i=0; i<8; i++) {
+        for(int j=0; j<8; j++) {
+            initPiece_Empty(&board[i][j]);
+        }
+    }
+    initPiece(&board[3][3], KING, WHITE);
+}
+
 void findKing(Piece board[8][8], Color color, int* kingPosX, int* kingPosY) {
     for(int i=0; i<8; i++) {
         for(int j=0; j<8; j++) {
@@ -413,7 +460,7 @@ void squareToInt(Square square, int* x, int* y) {
     }
 }
 
-void intToSquare(int x, int y, Square* square) {
+void intToSquare(unsigned char x, unsigned char y, Square* square) {
     switch(x) {
         case 0: {
             switch(y) {
@@ -655,24 +702,65 @@ void addMoveToList(unsigned char x1, unsigned char y1,
                    unsigned char x2, unsigned char y2,
                    unsigned char** x1List, unsigned char** y1List,
                    unsigned char** x2List, unsigned char** y2List,
-                   unsigned int *index, int* size) {
-    printf("index: %d\nsize: %d\n", *index, *size);
-    if(*index+20>*size) {
-        *size+=20;
-        printf("x1\n");
-        *x1List = realloc(*x1List, (*size));
-        printf("y1\n");
-        *y1List = realloc(*y1List, (*size));
-        printf("x2\n");
-        *x2List = realloc(*x2List, (*size));
-        printf("y2\n");
-        *y2List = realloc(*y2List, (*size));
+                   int* index, int* size) {
+    if (*index >= *size) {
+        *size += 10;
+        *x1List = (unsigned char*)realloc(*x1List, (*size) * sizeof(unsigned char));
+        if (!*x1List) {
+            fprintf(stderr, "x1List realloc failed\n");
+            exit(EXIT_FAILURE);
+        }
+        *y1List = (unsigned char*)realloc(*y1List, (*size) * sizeof(unsigned char));
+        if (!*y1List) {
+            fprintf(stderr, "y1List realloc failed\n");
+            exit(EXIT_FAILURE);
+        }
+        *x2List = (unsigned char*)realloc(*x2List, (*size) * sizeof(unsigned char));
+        if (!*x2List) {
+            fprintf(stderr, "x2List realloc failed\n");
+            exit(EXIT_FAILURE);
+        }
+        *y2List = (unsigned char*)realloc(*y2List, (*size) * sizeof(unsigned char));
+        if (!*y2List) {
+            fprintf(stderr, "y2List realloc failed\n");
+            exit(EXIT_FAILURE);
+        }
     }
-    *x1List[*index]=x1; *y1List[*index]=y1;
-    *x2List[*index]=x2; *y2List[*index]=y2;
+
+    (*x1List)[*index] = x1;
+    (*y1List)[*index] = y1;
+    (*x2List)[*index] = x2;
+    (*y2List)[*index] = y2;
+
+    (*index)++;
+}
+
+/*
+void addMoveToList(unsigned char x1, unsigned char y1,
+                   unsigned char x2, unsigned char y2,
+                   unsigned char** x1List, unsigned char** y1List,
+                   unsigned char** x2List, unsigned char** y2List,
+                   int *index, int* size) {
+    if(*index>=*size) {
+        *size+=10;
+        *x1List = (unsigned char*) realloc(*x1List, (*size));
+        if(!*x1List) printf("x1List realloc failed");
+        *y1List = (unsigned char*) realloc(*y1List, (*size));
+        if(!*y1List) printf("y1List realloc failed");
+        *x2List = (unsigned char*) realloc(*x2List, (*size));
+        if(!*x2List) printf("x2List realloc failed");
+        *y2List = (unsigned char*) realloc(*y2List, (*size));
+        if(!*y2List) printf("y2List realloc failed");
+    }
+
+    (*x1List)[*index]=x1;
+    (*y1List)[*index]=y1;
+    (*x2List)[*index]=x2;
+    (*y2List)[*index]=y2;
+
     (*index)++;
     return;
-}
+}*/
 
 void getMoves_Pawn_White(Piece board[8][8],
                   int x, int y,
@@ -690,7 +778,7 @@ void getMoves_Pawn_White(Piece board[8][8],
     if(y==1) {
         if(board[x][y+1].pieceType==EMPTY &&
            board[x][y+2].pieceType==EMPTY) {
-            addMoveToList(x, y, x, x+2, x1List, y1List, x2List, y2List, index, size);
+            addMoveToList(x, y, x, y+2, x1List, y1List, x2List, y2List, index, size);
        }
     }
     if(isOnBoard(x-1, y+1)) {
@@ -722,7 +810,7 @@ void getMoves_Pawn_Black(Piece board[8][8],
     if(y==6) {
         if(board[x][y-1].pieceType==EMPTY &&
            board[x][y-2].pieceType==EMPTY) {
-            addMoveToList(x, y, x, x-2, x1List, y1List, x2List, y2List, index, size);
+            addMoveToList(x, y, x, y-2, x1List, y1List, x2List, y2List, index, size);
        }
     }
     if(isOnBoard(x-1, y-1)) {
@@ -786,6 +874,8 @@ void getMoves_Diagonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -800,6 +890,8 @@ void getMoves_Diagonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -814,6 +906,8 @@ void getMoves_Diagonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -858,6 +952,8 @@ void getMoves_Orthogonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
     for(int i=1; i<8; i++) {
@@ -871,6 +967,8 @@ void getMoves_Orthogonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -886,6 +984,8 @@ void getMoves_Orthogonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
     for(int i=1; i<8; i++) {
@@ -899,6 +999,8 @@ void getMoves_Orthogonal(Piece board[8][8],
             } else {
                 break;
             }
+        } else {
+            break;
         }
     }
 
@@ -967,21 +1069,36 @@ void getMoves_King(Piece board[8][8],
     }
 }
 
-void intToSquareMoveList(unsigned char* x1List,
-                         unsigned char* y1List,
-                         unsigned char* x2List,
-                         unsigned char* y2List,
-                         int* index,
-                         Move* moveList) {
-    moveList = realloc(moveList, (*index)*sizeof(unsigned char));
+void intToSquareMoveList(unsigned char** x1List,
+                         unsigned char** y1List,
+                         unsigned char** x2List,
+                         unsigned char** y2List,
+                         int index,
+                         Move** moveList) {
+    printf("x2List1:%p\n", *x2List);
+    (*moveList) = (Move*) malloc(index*sizeof(Move));
+    printf("x2List2:%p\n", *x2List);
     Square* square;
-
-    for(int i=0; i<*index; i++) {
-        intToSquare(x1List[i], y1List[i], square);
-        moveList[i].from = *square;
-        intToSquare(x2List[i], y2List[i], square);
-        moveList[i].to = *square;
+    printf("x2List3:%p\n", *x2List);
+    unsigned char x1T, y1T, x2T, y2T;
+    for(int i=0; i<index; i++) {
+        x1T = (*x1List)[i];
+        printf("x1T:%d\n", x1T);
+        y1T = (*y1List)[i];
+        printf("y1T:%d\n", y1T);
+        x2T = (*x2List)[i];
+        printf("x2T:%d\n", x2T);
+        y2T = (*y2List)[i];
+        printf("y2T:%d\n", y2T);
+        printf("x2List4:%p\n", *x2List);
+        intToSquare(x1T, y1T, square);
+        printf("x2List5:%p\n", *x2List);
+        (*moveList)[i].from = *square;
+        printf("x2List6:%p\n", *x2List);
+        intToSquare(x2T, y2T, square);
+        (*moveList)[i].to = *square;
     }
+    printf("x2List in intToSquareMoveList:%p\n", x2List);
     return;
 }
 
@@ -1024,20 +1141,25 @@ void getMoves_FromSquare(Piece board[8][8],
 }
 
 
-int getMoves(Piece board[8][8], Color color, Move* moveList) {
-    printf("2");
-    int index = 0, size = 20;
-    printf("hello");
-    unsigned char **x1List, **y1List, **x2List, **y2List;
-    printf("bye");
-    *x1List = malloc(size);
-    *y1List = malloc(size);
-    *x2List = malloc(size);
-    *y2List = malloc(size);
+int getMoves(Piece board[8][8], Color color, Move** moveList) {
+    int index = 0, size = 10;
+    unsigned char *x1List, *y1List, *x2List, *y2List;
+    x1List = (unsigned char*)malloc(size);
+    y1List = (unsigned char*)malloc(size);
+    x2List = (unsigned char*)malloc(size);
+    y2List = (unsigned char*)malloc(size);
     for(int i=0; i<8; i++) {
         for(int j=0; j<8; j++) {
-            getMoves_FromSquare(board, color, i, j, x1List, y1List, x2List, y2List, &index, &size);
+            getMoves_FromSquare(board, color, i, j, &x1List, &y1List, &x2List, &y2List, &index, &size);
         }
     }
+    printf("x1ListP:%p\ny1ListP:%p\nx2ListP:%p\ny2ListP:%p\nindex:%d\nsize:%d\n",
+           x1List, y1List, x2List, y2List, index);
+    intToSquareMoveList(&x1List, &y1List, &x2List, &y2List, index, moveList);
+    printf("x2List:%p\n", x2List);
+    free(x2List);
+    free(x1List);
+    free(y1List);
+    free(y2List);
     return index;
 }

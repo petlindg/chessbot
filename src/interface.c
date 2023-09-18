@@ -71,11 +71,9 @@ void printBoard(Piece board[8][8]) {
 
 void printMoves(Move* moves, int size) {
     int x1, y1, x2, y2;
-    Square squareFrom;
-    Square squareTo;
     for(int i=0; i<size; i++) {
-        squareToInt(squareFrom, &x1, &y1);
-        squareToInt(squareTo, &x2, &y2);
+        squareToInt(moves[i].from, &x1, &y1);
+        squareToInt(moves[i].to, &x2, &y2);
         printf("(%d, %d) -> (%d, %d)\n", x1, y1, x2, y2);
     }
     return;

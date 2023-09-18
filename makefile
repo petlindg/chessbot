@@ -25,3 +25,6 @@ chess: $(OBJ)
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+
+debug: $(OBJ)
+	$(CC) -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
