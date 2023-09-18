@@ -460,6 +460,7 @@ void squareToInt(Square square, int* x, int* y) {
     }
 }
 
+
 void intToSquare(unsigned char x, unsigned char y, Square* square) {
     switch(x) {
         case 0: {
@@ -698,44 +699,7 @@ void movePiece(Piece board[8][8], Move move) {
     return;
 }
 
-void addMoveToList(unsigned char x1, unsigned char y1,
-                   unsigned char x2, unsigned char y2,
-                   unsigned char** x1List, unsigned char** y1List,
-                   unsigned char** x2List, unsigned char** y2List,
-                   int* index, int* size) {
-    if (*index >= *size) {
-        *size += 10;
-        *x1List = (unsigned char*)realloc(*x1List, (*size) * sizeof(unsigned char));
-        if (!*x1List) {
-            fprintf(stderr, "x1List realloc failed\n");
-            exit(EXIT_FAILURE);
-        }
-        *y1List = (unsigned char*)realloc(*y1List, (*size) * sizeof(unsigned char));
-        if (!*y1List) {
-            fprintf(stderr, "y1List realloc failed\n");
-            exit(EXIT_FAILURE);
-        }
-        *x2List = (unsigned char*)realloc(*x2List, (*size) * sizeof(unsigned char));
-        if (!*x2List) {
-            fprintf(stderr, "x2List realloc failed\n");
-            exit(EXIT_FAILURE);
-        }
-        *y2List = (unsigned char*)realloc(*y2List, (*size) * sizeof(unsigned char));
-        if (!*y2List) {
-            fprintf(stderr, "y2List realloc failed\n");
-            exit(EXIT_FAILURE);
-        }
-    }
 
-    (*x1List)[*index] = x1;
-    (*y1List)[*index] = y1;
-    (*x2List)[*index] = x2;
-    (*y2List)[*index] = y2;
-
-    (*index)++;
-}
-
-/*
 void addMoveToList(unsigned char x1, unsigned char y1,
                    unsigned char x2, unsigned char y2,
                    unsigned char** x1List, unsigned char** y1List,
@@ -760,7 +724,7 @@ void addMoveToList(unsigned char x1, unsigned char y1,
 
     (*index)++;
     return;
-}*/
+}
 
 void getMoves_Pawn_White(Piece board[8][8],
                   int x, int y,
@@ -845,7 +809,7 @@ void getMoves_Knight(Piece board[8][8],
         x2 = x+xOffsetList[i];
         y2 = y+yOffsetList[i];
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].color!=EMPTY&&board[x2][y2].color!=color) {
+            if(board[x2][y2].color==EMPTY||board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             }
         }
@@ -866,7 +830,7 @@ void getMoves_Diagonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x-i; y2=y-i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -882,7 +846,7 @@ void getMoves_Diagonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x+i; y2=y-i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -898,7 +862,7 @@ void getMoves_Diagonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x-i; y2=y+i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -914,7 +878,7 @@ void getMoves_Diagonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x+i; y2=y+i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -944,7 +908,7 @@ void getMoves_Orthogonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x-i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -959,7 +923,7 @@ void getMoves_Orthogonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         x2=x+i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -976,7 +940,7 @@ void getMoves_Orthogonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         y2=y-i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -991,7 +955,7 @@ void getMoves_Orthogonal(Piece board[8][8],
     for(int i=1; i<8; i++) {
         y2=y+i;
         if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType!=EMPTY) {
+            if(board[x2][y2].pieceType==EMPTY) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
             } else if(board[x2][y2].color!=color) {
                 addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
@@ -1069,36 +1033,20 @@ void getMoves_King(Piece board[8][8],
     }
 }
 
-void intToSquareMoveList(unsigned char** x1List,
-                         unsigned char** y1List,
-                         unsigned char** x2List,
-                         unsigned char** y2List,
+void intToSquareMoveList(unsigned char* x1List,
+                         unsigned char* y1List,
+                         unsigned char* x2List,
+                         unsigned char* y2List,
                          int index,
                          Move** moveList) {
-    printf("x2List1:%p\n", *x2List);
     (*moveList) = (Move*) malloc(index*sizeof(Move));
-    printf("x2List2:%p\n", *x2List);
-    Square* square;
-    printf("x2List3:%p\n", *x2List);
-    unsigned char x1T, y1T, x2T, y2T;
+    Square square;
     for(int i=0; i<index; i++) {
-        x1T = (*x1List)[i];
-        printf("x1T:%d\n", x1T);
-        y1T = (*y1List)[i];
-        printf("y1T:%d\n", y1T);
-        x2T = (*x2List)[i];
-        printf("x2T:%d\n", x2T);
-        y2T = (*y2List)[i];
-        printf("y2T:%d\n", y2T);
-        printf("x2List4:%p\n", *x2List);
-        intToSquare(x1T, y1T, square);
-        printf("x2List5:%p\n", *x2List);
-        (*moveList)[i].from = *square;
-        printf("x2List6:%p\n", *x2List);
-        intToSquare(x2T, y2T, square);
-        (*moveList)[i].to = *square;
+        intToSquare(x1List[i], y1List[i], &square);
+        (*moveList)[i].from = square;
+        intToSquare(x2List[i], y2List[i], &square);
+        (*moveList)[i].to = square;
     }
-    printf("x2List in intToSquareMoveList:%p\n", x2List);
     return;
 }
 
@@ -1148,15 +1096,14 @@ int getMoves(Piece board[8][8], Color color, Move** moveList) {
     y1List = (unsigned char*)malloc(size);
     x2List = (unsigned char*)malloc(size);
     y2List = (unsigned char*)malloc(size);
-    for(int i=0; i<8; i++) {
-        for(int j=0; j<8; j++) {
-            getMoves_FromSquare(board, color, i, j, &x1List, &y1List, &x2List, &y2List, &index, &size);
+    for(int j=0; j<8; j++) {
+        for(int i=0; i<8; i++) {
+            if(board[i][j].color==color) {
+                getMoves_FromSquare(board, color, i, j, &x1List, &y1List, &x2List, &y2List, &index, &size);
+            }
         }
     }
-    printf("x1ListP:%p\ny1ListP:%p\nx2ListP:%p\ny2ListP:%p\nindex:%d\nsize:%d\n",
-           x1List, y1List, x2List, y2List, index);
-    intToSquareMoveList(&x1List, &y1List, &x2List, &y2List, index, moveList);
-    printf("x2List:%p\n", x2List);
+    intToSquareMoveList(x1List, y1List, x2List, y2List, index, moveList);
     free(x2List);
     free(x1List);
     free(y1List);

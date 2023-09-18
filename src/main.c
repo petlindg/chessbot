@@ -9,7 +9,7 @@
 
 int main(){
     Piece board[8][8];
-    initTestBoard2(board);
+    initBoard(board);
     printBoard(board);
     Move* moves;
     int size = getMoves(board, WHITE, &moves);
