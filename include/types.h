@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #define TRUE 1
 #define FALSE 0
 
@@ -28,5 +30,7 @@ typedef struct Moves {
 typedef struct Pieces {
     Color color;
     PieceType pieceType;
-    unsigned char canCastle;
+    bool canEnpassante_left;
+    bool canEnpassante_right;
+    bool canSpecialMove;
 } Piece;

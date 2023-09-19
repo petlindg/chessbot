@@ -2,6 +2,7 @@
 #include "interface.h"
 #include "chess.h"
 #include <stdio.h>
+#include <stdbool.h>
 
 void printPiece(Piece* piece) {
     switch(piece->pieceType) {

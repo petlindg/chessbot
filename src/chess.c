@@ -14,7 +14,13 @@ void initPiece_Empty(Piece* piece) {
 void initPiece(Piece* piece, PieceType pieceType, Color color) {
     piece->pieceType = pieceType;
     piece->color = color;
-    piece->canCastle = 1;
+    if(pieceType==ROOK||pieceType==KING) {
+        piece->canSpecialMove = true;
+    }
+    if(pieceType==PAWN) {
+        piece->canEnpassante_left=false;
+        piece->canEnpassante_right=false;
+    }
     return;
 }
 
@@ -690,12 +696,114 @@ void intToSquare(unsigned char x, unsigned char y, Square* square) {
     }
 }
 
+void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    Color color = board[x1][y1].color;
+    if(y2-y1==2) { //white pawn double move
+        if(isOnBoard(x2-1,y2)) { //check left, set left enPassante right
+            if(board[x2-1][y2].pieceType==PAWN &&
+               board[x2-1][y2].color!=color) {
+                board[x2-1][y2].canEnpassante_right=true;
+            }
+        }
+        if(isOnBoard(x2+1,y2)) {//check right, set right enPassante left
+            if(board[x2+1][y2].pieceType==PAWN &&
+               board[x2+1][y2].color!=color) {
+                board[x2+1][y2].canEnpassante_left=true;
+            }
+        }
+    } else if(y1-y2==2) { //black pawn double move
+        if(isOnBoard(x2-1,y2)) { //check left, set left enPassante right
+            if(board[x2-1][y2].pieceType==PAWN &&
+               board[x2-1][y2].color!=color) {
+                board[x2-1][y2].canEnpassante_right=true;
+            }
+        }
+        if(isOnBoard(x2+1,y2)) { //check right, set right enPassante left
+            if(board[x2+1][y2].pieceType==PAWN &&
+               board[x2+1][y2].color!=color) {
+                board[x2+1][y2].canEnpassante_left=true;
+            }
+        }
+    } else if(x1!=x2) {
+        if(board[x2][y2].pieceType==EMPTY) {
+            if(color==WHITE) {
+                initPiece_Empty(&board[x2][y1-1]);
+            } else {
+                initPiece_Empty(&board[x2][y1+1]);
+            }
+        }
+    }
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    return;
+}
+
+void movePiece_Knight(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    return;
+}
+
+void movePiece_Bishop(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    return;
+}
+
+void movePiece_Rook(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+
+    board[x2][y2].canSpecialMove=false;
+    return;
+}
+
+void movePiece_Queen(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    return;
+}
+
+void movePiece_King(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
+    if(x2-x1==2) {
+        board[3][y2]=board[0][y2];
+        board[3][y2].canSpecialMove=false;
+    } else if(x1-x2==2) {
+        board[5][y2]=board[7][y2];
+        board[5][y2].canSpecialMove=false;
+    }
+    board[x2][y2] = board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+
+    board[x2][y2].canSpecialMove=false;
+    return;
+}
+
 void movePiece(Piece board[8][8], Move move) {
     int x1, y1, x2, y2;
     squareToInt(move.from, &x1, &y1);
     squareToInt(move.to, &x2, &y2);
-    board[x2][y2] = board[x1][y1];
-    initPiece_Empty(&board[x1][y1]);
+
+    switch(board[x1][y1].pieceType) {
+        case PAWN:
+            movePiece_Pawn(board, x1, y1, x2 ,y2);
+            break;
+        case KNIGHT:
+            movePiece_Knight(board, x1, y1, x2 ,y2);
+            break;
+        case BISHOP:
+            movePiece_Bishop(board, x1, y1, x2 ,y2);
+            break;
+        case ROOK:
+            movePiece_Rook(board, x1, y1, x2 ,y2);
+            break;
+        case QUEEN:
+            movePiece_Queen(board, x1, y1, x2 ,y2);
+            break;
+        case KING:
+            movePiece_King(board, x1, y1, x2 ,y2);
+            break;
+    }
     return;
 }
 
@@ -726,6 +834,147 @@ void addMoveToList(unsigned char x1, unsigned char y1,
     return;
 }
 
+//checks if a move is valid, returns true if it is, false if it isn't
+bool checkMove(Piece board[8][8],
+               Color color,
+               int x1, int y1,
+               int x2, int y2) {
+    Piece tmp1 = board[x1][y1];
+    Piece tmp2 = board[x2][y2];
+    board[x2][y2]=board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    if(isCheck(board, color)) {
+       board[x1][y1]=tmp1;
+       board[x2][y2]=tmp2;
+       return false; 
+    }
+    board[x1][y1]=tmp1;
+    board[x2][y2]=tmp2;
+    return true;
+}
+
+bool checkMove_Pawn(Piece board[8][8],
+                    Color color,
+                    int x1, int y1,
+                    int x2, int y2) {
+    Piece tmp1 = board[x1][y1];
+    Piece tmp2 = board[x2][y2];
+    if(x1==x2) {
+        board[x2][y2]=board[x1][y1];
+        if(isCheck(board, color)) {
+            board[x1][y1]=tmp1;
+            board[x2][y2]=tmp2;
+            return false;
+        }
+        board[x1][y1]=tmp1;
+        board[x2][y2]=tmp2;
+        return true;
+    } else if(board[x2][y2].color==NONE) {
+        if(color==WHITE) {
+            Piece tmp3 = board[x2][y2-1];
+            board[x2][y2]=board[x1][y1];
+            initPiece_Empty(&board[x1][y1]);
+            initPiece_Empty(&board[x2][y2-1]);
+            if(isCheck(board, color)) {
+                board[x1][y1]=tmp1;
+                board[x2][y2]=tmp2;
+                board[x2][y2-1]=tmp3;
+                return false;
+            }
+            board[x1][y1]=tmp1;
+            board[x2][y2]=tmp2;
+            board[x2][y2-1]=tmp3;
+            return true;
+        } //else BLACK
+        Piece tmp3 = board[x2][y2+1];
+        board[x2][y2]=board[x1][y1];
+        initPiece_Empty(&board[x1][y1]);
+        initPiece_Empty(&board[x2][y2+1]);
+        if(isCheck(board, color)) {
+            board[x1][y1]=tmp1;
+            board[x2][y2]=tmp2;
+            board[x2][y2+1]=tmp3;
+            return false;
+        }
+        board[x1][y1]=tmp1;
+        board[x2][y2]=tmp2;
+        board[x2][y2+1]=tmp3;
+        return true;
+    }
+    board[x2][y2]=board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    if(isCheck(board, color)) {
+        board[x1][y1]=tmp1;
+        board[x2][y2]=tmp2;
+        return false;
+    }
+    board[x1][y1]=tmp1;
+    board[x2][y2]=tmp2;
+    return true;
+}
+
+bool checkMove_Castle(Piece board[8][8],
+                      Color color,
+                      int x1, int y1,
+                      int x2, int y2) {
+    if(isCheck(board, color)) {
+        return false;
+    }
+    Piece tmp1 = board[x1][y1];
+    if(x1-x2==2) {//castle queen side
+
+        board[3][y1]=board[x1][y1];
+        initPiece_Empty(&board[x1][y1]);
+        if(isCheck(board, color)) {
+            board[x1][y1]=tmp1;
+            initPiece_Empty(&board[3][y1]);
+            return false;
+        }
+
+        Piece tmp2 = board[0][y1];
+        board[2][y1]=board[3][y1];
+        board[3][y1]=board[0][y1];
+        initPiece_Empty(&board[0][y1]);
+        if(isCheck(board, color)) {
+            board[x1][y1]=tmp1;
+            board[0][y1]=tmp2;
+            initPiece_Empty(&board[2][y1]);
+            initPiece_Empty(&board[3][y1]);
+            return false;
+        }
+        board[x1][y1]=tmp1;
+        board[0][y1]=tmp2;
+        initPiece_Empty(&board[2][y1]);
+        initPiece_Empty(&board[3][y1]);
+        return true;
+    }
+    
+    //else kingside
+    board[5][y1]=board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    if(isCheck(board, color)) {
+        board[x1][y1]=tmp1;
+        initPiece_Empty(&board[5][y1]);
+        return false;
+    }
+    Piece tmp2 = board[7][y1];
+    board[6][y1]=board[5][y1];
+    board[5][y1]=board[7][y1];
+    initPiece_Empty(&board[7][y1]);
+    if(isCheck(board, color)) {
+        board[x1][y1]=tmp1;
+        board[7][y1]=tmp2;
+        initPiece_Empty(&board[6][y1]);
+        initPiece_Empty(&board[7][y1]);
+        return false;
+    }
+    board[x1][y1]=tmp1;
+    board[7][y1]=tmp2;
+    initPiece_Empty(&board[6][y1]);
+    initPiece_Empty(&board[7][y1]);
+    return true;
+}
+
 void getMoves_Pawn_White(Piece board[8][8],
                   int x, int y,
                   unsigned char** x1List,
@@ -736,23 +985,41 @@ void getMoves_Pawn_White(Piece board[8][8],
                   int* size) {
     if(isOnBoard(x, y+1)) {
         if(board[x][y+1].pieceType==EMPTY) {
-            addMoveToList(x, y, x, y+1, x1List, y1List, x2List, y2List, index, size);
+            if(checkMove_Pawn(board, WHITE, x, y, x, y+1)) {
+                addMoveToList(x, y, x, y+1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     if(y==1) {
         if(board[x][y+1].pieceType==EMPTY &&
            board[x][y+2].pieceType==EMPTY) {
-            addMoveToList(x, y, x, y+2, x1List, y1List, x2List, y2List, index, size);
+            if(checkMove_Pawn(board, WHITE, x, y, x, y+2)) {
+                addMoveToList(x, y, x, y+2, x1List, y1List, x2List, y2List, index, size);
+            }
        }
     }
     if(isOnBoard(x-1, y+1)) {
-        if(board[x-1][y+1].color==BLACK) {
-            addMoveToList(x, y, x-1, y+1, x1List, y1List, x2List, y2List, index, size);
+        if(board[x][y].canEnpassante_left) {
+            if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
+                addMoveToList(x, y, x-1, y+1, x1List, y1List, x2List, y2List, index, size);
+            }
+            board[x][y].canEnpassante_left=false;
+        } else if(board[x-1][y+1].color==BLACK) {
+            if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
+                addMoveToList(x, y, x-1, y+1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     if(isOnBoard(x+1, y+1)) {
-        if(board[x+1][y+1].color==BLACK) {
-            addMoveToList(x, y, x+1, y+1, x1List, y1List, x2List, y2List, index, size);
+        if(board[x][y].canEnpassante_right) {
+            if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) {
+                addMoveToList(x, y, x+1, y+1, x1List, y1List, x2List, y2List, index, size);
+            }
+            board[x][y].canEnpassante_right=false;
+        } else if(board[x+1][y+1].color==BLACK) {
+            if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) { 
+                addMoveToList(x, y, x+1, y+1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     return;
@@ -768,23 +1035,41 @@ void getMoves_Pawn_Black(Piece board[8][8],
                   int* size) {
     if(isOnBoard(x, y-1)) {
         if(board[x][y-1].pieceType==EMPTY) {
-            addMoveToList(x, y, x, y-1, x1List, y1List, x2List, y2List, index, size);
+            if(checkMove_Pawn(board, BLACK, x, y, x, y-1)) {
+                addMoveToList(x, y, x, y-1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     if(y==6) {
         if(board[x][y-1].pieceType==EMPTY &&
            board[x][y-2].pieceType==EMPTY) {
-            addMoveToList(x, y, x, y-2, x1List, y1List, x2List, y2List, index, size);
+            if(checkMove_Pawn(board, BLACK, x, y, x, y-2)) {
+                addMoveToList(x, y, x, y-2, x1List, y1List, x2List, y2List, index, size);
+            }
        }
     }
     if(isOnBoard(x-1, y-1)) {
-        if(board[x-1][y-1].color==WHITE) {
-            addMoveToList(x, y, x-1, y-1, x1List, y1List, x2List, y2List, index, size);
+        if(board[x][y].canEnpassante_left) {
+            if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
+                addMoveToList(x, y, x-1, y-1, x1List, y1List, x2List, y2List, index, size);
+            }
+            board[x][y].canEnpassante_left=false;
+        } else if(board[x-1][y-1].color==WHITE) {
+            if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
+                addMoveToList(x, y, x-1, y-1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     if(isOnBoard(x+1, y-1)) {
-        if(board[x+1][y-1].color==WHITE) {
-            addMoveToList(x, y, x+1, y-1, x1List, y1List, x2List, y2List, index, size);
+        if(board[x][y].canEnpassante_right) {
+            if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
+                addMoveToList(x, y, x+1, y-1, x1List, y1List, x2List, y2List, index, size);
+            }
+            board[x][y].canEnpassante_right=false;
+        } else if(board[x+1][y-1].color==WHITE) {
+            if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
+                addMoveToList(x, y, x+1, y-1, x1List, y1List, x2List, y2List, index, size);
+            }
         }
     }
     return;
@@ -810,7 +1095,9 @@ void getMoves_Knight(Piece board[8][8],
         y2 = y+yOffsetList[i];
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].color==EMPTY||board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             }
         }
     }
@@ -831,9 +1118,13 @@ void getMoves_Diagonal(Piece board[8][8],
         x2=x-i; y2=y-i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -847,9 +1138,13 @@ void getMoves_Diagonal(Piece board[8][8],
         x2=x+i; y2=y-i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -863,9 +1158,13 @@ void getMoves_Diagonal(Piece board[8][8],
         x2=x-i; y2=y+i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -879,9 +1178,13 @@ void getMoves_Diagonal(Piece board[8][8],
         x2=x+i; y2=y+i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -909,9 +1212,13 @@ void getMoves_Orthogonal(Piece board[8][8],
         x2=x-i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -924,9 +1231,13 @@ void getMoves_Orthogonal(Piece board[8][8],
         x2=x+i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -941,9 +1252,13 @@ void getMoves_Orthogonal(Piece board[8][8],
         y2=y-i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -956,9 +1271,13 @@ void getMoves_Orthogonal(Piece board[8][8],
         y2=y+i;
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
             } else if(board[x2][y2].color!=color) {
-                addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                if(checkMove(board, color, x, y, x2, y2)) {
+                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                }
                 break;
             } else {
                 break;
@@ -1026,7 +1345,28 @@ void getMoves_King(Piece board[8][8],
             x2=x+i; y2=y+j;
             if(isOnBoard(x2, y2)) {
                 if(board[x2][y2].color!=color) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    if(checkMove(board, color, x, y, x2, y2)) {
+                        addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    }
+                }
+            }
+        }
+    }
+    if(board[x][y].canSpecialMove) {
+        if(board[0][y].pieceType==ROOK&&board[0][y].canSpecialMove) {
+            if(board[1][y].color==NONE &&
+               board[2][y].color==NONE &&
+               board[3][y].color==NONE) {
+                if(checkMove_Castle(board, color, x, y, 2, y)) {
+                    addMoveToList(x, y, 2, y, x1List, y1List, x2List, y2List, index, size);
+                }
+            }
+        }
+        if(board[7][y].pieceType==ROOK&&board[7][y].canSpecialMove) {
+            if(board[5][y].color==NONE &&
+               board[6][y].color==NONE) {
+                if(checkMove_Castle(board, color, x, y, 6, y)) {
+                    addMoveToList(x, y, 6, y, x1List, y1List, x2List, y2List, index, size);
                 }
             }
         }

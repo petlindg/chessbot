@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <time.h>
+#include <unistd.h>
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -8,13 +10,29 @@
 #include "interface.h"
 
 int main(){
-    Piece board[8][8];
-    initBoard(board);
-    printBoard(board);
-    Move* moves;
-    int size = getMoves(board, WHITE, &moves);
-    printf("Size: %d\n", size);
-    printMoves(moves, size);
-    free(moves);
 
+    srand(time(NULL));
+    Piece board[8][8];
+    Move* moves;
+    unsigned int r, size;
+    initBoard(board);
+    
+    int iterations = 10;
+
+    for(int i=0; i<iterations; i++) {
+        printBoard(board);
+        size = getMoves(board, WHITE, &moves);
+        printf("Size: %d\n", size);
+        r=rand()%size;
+        movePiece(board, moves[r]);
+        free(moves);
+        sleep(1);
+        printBoard(board);
+        size = getMoves(board, BLACK, &moves);
+        printf("Size: %d\n", size);
+        r=rand()%size;
+        movePiece(board, moves[r]);
+        free(moves);
+        sleep(1);
+    }
 }
