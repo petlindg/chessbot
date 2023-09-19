@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include "types.h"
 #include "chess.h"
+#include "interface.h"
 
 void initPiece_Empty(Piece* piece) {
     piece->pieceType = EMPTY;
@@ -766,11 +767,13 @@ void movePiece_Queen(Piece board[8][8], unsigned char x1, unsigned char y1, unsi
 
 void movePiece_King(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
     if(x2-x1==2) {
-        board[3][y2]=board[0][y2];
-        board[3][y2].canSpecialMove=false;
-    } else if(x1-x2==2) {
         board[5][y2]=board[7][y2];
+        initPiece_Empty(&board[7][y2]);
         board[5][y2].canSpecialMove=false;
+    } else if(x1-x2==2) {
+        board[3][y2]=board[0][y2];
+        initPiece_Empty(&board[0][y2]);
+        board[3][y2].canSpecialMove=false;
     }
     board[x2][y2] = board[x1][y1];
     initPiece_Empty(&board[x1][y1]);
@@ -947,32 +950,32 @@ bool checkMove_Castle(Piece board[8][8],
         initPiece_Empty(&board[2][y1]);
         initPiece_Empty(&board[3][y1]);
         return true;
-    }
-    
-    //else kingside
-    board[5][y1]=board[x1][y1];
-    initPiece_Empty(&board[x1][y1]);
-    if(isCheck(board, color)) {
-        board[x1][y1]=tmp1;
-        initPiece_Empty(&board[5][y1]);
-        return false;
-    }
-    Piece tmp2 = board[7][y1];
-    board[6][y1]=board[5][y1];
-    board[5][y1]=board[7][y1];
-    initPiece_Empty(&board[7][y1]);
-    if(isCheck(board, color)) {
-        board[x1][y1]=tmp1;
-        board[7][y1]=tmp2;
-        initPiece_Empty(&board[6][y1]);
+    } else {
+        // else kingside
+        board[5][y1] = board[x1][y1];
+        initPiece_Empty(&board[x1][y1]);
+        if (isCheck(board, color)) {
+            board[x1][y1] = tmp1;
+            initPiece_Empty(&board[5][y1]);
+            return false;
+        }
+        Piece tmp2 = board[7][y1];
+        board[6][y1] = board[5][y1];
+        board[5][y1] = board[7][y1];
         initPiece_Empty(&board[7][y1]);
-        return false;
+        if (isCheck(board, color)) {
+            board[x1][y1] = tmp1;
+            board[7][y1] = tmp2;
+            initPiece_Empty(&board[5][y1]);
+            initPiece_Empty(&board[6][y1]);
+            return false;
+        }
+        board[x1][y1] = tmp1;
+        board[7][y1] = tmp2;
+        initPiece_Empty(&board[5][y1]);
+        initPiece_Empty(&board[6][y1]);
+        return true;
     }
-    board[x1][y1]=tmp1;
-    board[7][y1]=tmp2;
-    initPiece_Empty(&board[6][y1]);
-    initPiece_Empty(&board[7][y1]);
-    return true;
 }
 
 void getMoves_Pawn_White(Piece board[8][8],
