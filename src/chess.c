@@ -733,6 +733,10 @@ void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsig
                 initPiece_Empty(&board[x2][y1+1]);
             }
         }
+    } else if(y2==7||y2==0) { //pawn promote
+        initPiece(&board[x2][y2], QUEEN, color);
+        initPiece_Empty(&board[x1][y1]);
+        return;
     }
     board[x2][y2] = board[x1][y1];
     initPiece_Empty(&board[x1][y1]);
