@@ -10,14 +10,14 @@
 #include "interface.h"
 
 int main(){
+    int t = time(NULL);
 
-    srand(time(NULL));
+    srand(t);
     Piece board[8][8];
     Move* moves;
     unsigned int r, size=1, i=0;
     Color color;
     Move move;
-    bool hasMoved = false;
     initBoard(board);
     
     int iterations = 10;
@@ -25,7 +25,7 @@ int main(){
     printBoard(board);
 
 
-
+    /*
     while(size!=0) {
         if(i%2) {
             color = BLACK;
@@ -59,23 +59,43 @@ int main(){
         if(i>1000) break;
         i++;
     }
-
-    /*
-    // game loop of random moves until one color wins
-    while(size!=0) {
-        if(i%2) {
-            color = BLACK;
-        } else {
-            color = WHITE;
-        }
-        size = getMoves(board, color, &moves);
-        r=rand() % size;
-        movePiece(board, moves[r]);
-        printBoard(board);
-        free(moves);
-        if(i>1000) break;
-        printf("Size:%d, i:%d\n", size, i);
-        i++;
-    }
     */
+
+    for(unsigned int k=0; k<1000000; k++) {
+        // game loop of random moves until one color wins
+        initBoard(board);
+        i=0;
+        while(1) {
+            if(i%2) {
+                color = BLACK;
+            } else {
+                color = WHITE;
+            }
+            size = getMoves(board, color, &moves);
+            if(size) {
+                r=rand() % size;
+            }
+            movePiece(board, moves[r]);
+            free(moves);
+            if(i>1000||size==0) {
+                break;
+            } else if(isCheck(board, color)) {
+                printf("Test failed. color {");
+                if(color==WHITE) {
+                    printf("WHITE");
+                } else {
+                    printf("BLACK");
+                }
+                printf("} still in check after moving\n");
+                printMove(moves[r]);
+                printf("\n");
+                printBoard(board);
+                printf("seed:%d\n", t);
+                exit(0);
+            }
+            i++;
+        }
+    }
+    printf("Test succeeded\n");
+    printf("seed:%d\n", t);
 }
