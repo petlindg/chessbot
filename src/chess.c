@@ -165,32 +165,36 @@ bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY
     for(int i=kingPosX-1, j=kingPosY-1; i>=0&&j>=0; i--, j--) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
-          (board[i][j].color != color))
+          (board[i][j].color != color)) {
             return true;
+            }
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check down right of king
     for(int i=kingPosX+1, j=kingPosY-1; i<8&&j>=0; i++, j--) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
-          (board[i][j].color != color))
+          (board[i][j].color != color)) {
             return true;
+            }
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check up left of king
     for(int i=kingPosX-1, j=kingPosY+1; i>=0&&j<8; i--, j++) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
-          (board[i][j].color != color))
+          (board[i][j].color != color)) {
             return true;
+            }
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check up right of king
     for(int i=kingPosX+1, j=kingPosY+1; i<8&&j<8; i++, j++) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
-          (board[i][j].color != color))
+          (board[i][j].color != color)) {
             return true;
+            }
         if(board[i][j].pieceType!=EMPTY) break;
     }
     return false;
@@ -211,7 +215,7 @@ bool isCheck_Pawn(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
             }
         }
         return false;
-    }
+    } //else color==BLACK;
     if(isOnBoard(kingPosX-1, kingPosY-1)) {
         if(board[kingPosX-1][kingPosY-1].pieceType==PAWN &&
            board[kingPosX-1][kingPosY-1].color==WHITE) {
@@ -728,9 +732,9 @@ void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsig
     } else if(x1!=x2) {
         if(board[x2][y2].pieceType==EMPTY) {
             if(color==WHITE) {
-                initPiece_Empty(&board[x2][y1-1]);
+                initPiece_Empty(&board[x2][y2-1]);
             } else {
-                initPiece_Empty(&board[x2][y1+1]);
+                initPiece_Empty(&board[x2][y2+1]);
             }
         }
     } else if(y2==7||y2==0) { //pawn promote
@@ -868,6 +872,7 @@ bool checkMove_Pawn(Piece board[8][8],
     Piece tmp2 = board[x2][y2];
     if(x1==x2) {
         board[x2][y2]=board[x1][y1];
+        initPiece_Empty(&board[x1][y1]);
         if(isCheck(board, color)) {
             board[x1][y1]=tmp1;
             board[x2][y2]=tmp2;
