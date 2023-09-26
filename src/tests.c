@@ -6,6 +6,36 @@
 #include "interface.h"
 #include "tests.h"
 
+void randomTestGame() {
+    int t = time(NULL);
+    srand(t);
+
+    Piece board[8][8];
+    Move* moves;
+    unsigned int size=1, i=1, r;
+    Color color;
+    Move move;
+
+    initBoard(board);
+    printBoard(board);
+
+    while(size) {
+        if(i%2) {
+            color = BLACK;
+        } else {
+            color = WHITE;
+        }
+        size = getMoves(board, color, &moves);
+        r = rand()%size;
+        movePiece(board, moves[r]);
+        printBoard(board);
+        printMove(moves[r]);
+        free(moves);
+        i++;
+        if(i>1000) break;
+    }
+}
+
 bool test_verifyNotCheck() {
     int t = time(NULL);
     srand(t);
