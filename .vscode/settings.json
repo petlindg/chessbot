@@ -1,8 +1,0 @@
-{
-    "C_Cpp.default.compilerPath": "C:\\msys64\\mingw64\\include\\gtk-4.0\\gtk",
-    "files.associations": {
-        "array": "c",
-        "string_view": "c",
-        "initializer_list": "c"
-    }
-}
