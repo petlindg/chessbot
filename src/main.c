@@ -10,5 +10,5 @@
 #include "tests.h"
 
 int main(){
-    randomTestGame();
+    test_verifyNotCheck();
 }

@@ -11,28 +11,28 @@ void randomTestGame() {
     srand(t);
 
     Piece board[8][8];
-    Move* moves;
+    Move* moves = malloc(10*sizeof(Move));
     unsigned int size=1, i=1, r;
     Color color;
-    Move move;
 
     initBoard(board);
     printBoard(board);
 
     while(size) {
+        moves = malloc(10*sizeof(Move));
         if(i%2) {
             color = BLACK;
         } else {
             color = WHITE;
         }
         size = getMoves(board, color, &moves);
+        if(i>1000||!size) break;
         r = rand()%size;
         movePiece(board, moves[r]);
         printBoard(board);
         printMove(moves[r]);
         free(moves);
         i++;
-        if(i>1000) break;
     }
 }
 
@@ -44,29 +44,34 @@ bool test_verifyNotCheck() {
     Move* moves;
     unsigned int r, size=1, i=0;
     Color color;
-    Move move;
     initBoard(board);
 
-    for(unsigned int k=0; k<1000; k++) {
+    for(unsigned int k=0; k<100000; k++) {
 
         initBoard(board);
         i=0;
+        printf("k:%d\n", k);
 
         while(1) {
+            moves = malloc(10*sizeof(Move));
             if(i%2) {
                 color = BLACK;
             } else {
                 color = WHITE;
             }
             size = getMoves(board, color, &moves);
+            if(i>1000||size==0) {
+                free(moves);
+                break;
+            }
             if(size) {
                 r=rand() % size;
             }
             movePiece(board, moves[r]);
-            free(moves);
-            if(i>1000||size==0) {
-                break;
-            } else if(isCheck(board, color)) {
+            i++;
+
+            //doublechecks position
+            if(isCheck(board, color)) {
                 printf("Test failed. color {");
                 if(color==WHITE) {
                     printf("WHITE");
@@ -81,7 +86,7 @@ bool test_verifyNotCheck() {
                 printf("k:%d\n", k);
                 return false;
             }
-            i++;
+            free(moves);
         }
     }
     printf("Test succeeded.\n");

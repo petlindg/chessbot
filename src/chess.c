@@ -308,399 +308,6 @@ bool isCheck(Piece board[8][8], Color color) {
     return false;
 }
 
-void squareToInt(Square square, int* x, int* y) {
-    //row A
-    *x=0;
-    switch(square) {
-        case A1:
-            *y=0; return;
-        case A2:
-            *y=1; return;
-        case A3:
-            *y=2; return;
-        case A4:
-            *y=3; return;
-        case A5:
-            *y=4; return;
-        case A6:
-            *y=5; return;
-        case A7:
-            *y=6; return;
-        case A8:
-            *y=7; return;
-    }
-    //row B
-    *x=1;
-    switch(square) {
-        case B1:
-            *y=0; return;
-        case B2:
-            *y=1; return;
-        case B3:
-            *y=2; return;
-        case B4:
-            *y=3; return;
-        case B5:
-            *y=4; return;
-        case B6:
-            *y=5; return;
-        case B7:
-            *y=6; return;
-        case B8:
-            *y=7; return;
-    }
-    //row C
-    *x=2;
-    switch(square) {
-        case C1:
-            *y=0; return;
-        case C2:
-            *y=1; return;
-        case C3:
-            *y=2; return;
-        case C4:
-            *y=3; return;
-        case C5:
-            *y=4; return;
-        case C6:
-            *y=5; return;
-        case C7:
-            *y=6; return;
-        case C8:
-            *y=7; return;
-    }
-    //row D
-    *x=3;
-    switch(square) {
-        case D1:
-            *y=0; return;
-        case D2:
-            *y=1; return;
-        case D3:
-            *y=2; return;
-        case D4:
-            *y=3; return;
-        case D5:
-            *y=4; return;
-        case D6:
-            *y=5; return;
-        case D7:
-            *y=6; return;
-        case D8:
-            *y=7; return;
-    }
-    //row E
-    *x=4;
-    switch(square) {
-        case E1:
-            *y=0; return;
-        case E2:
-            *y=1; return;
-        case E3:
-            *y=2; return;
-        case E4:
-            *y=3; return;
-        case E5:
-            *y=4; return;
-        case E6:
-            *y=5; return;
-        case E7:
-            *y=6; return;
-        case E8:
-            *y=7; return;
-    }
-    //row F
-    *x=5;
-    switch(square) {
-        case F1:
-            *y=0; return;
-        case F2:
-            *y=1; return;
-        case F3:
-            *y=2; return;
-        case F4:
-            *y=3; return;
-        case F5:
-            *y=4; return;
-        case F6:
-            *y=5; return;
-        case F7:
-            *y=6; return;
-        case F8:
-            *y=7; return;
-    }
-    //row G
-    *x=6;
-    switch(square) {
-        case G1:
-            *y=0; return;
-        case G2:
-            *y=1; return;
-        case G3:
-            *y=2; return;
-        case G4:
-            *y=3; return;
-        case G5:
-            *y=4; return;
-        case G6:
-            *y=5; return;
-        case G7:
-            *y=6; return;
-        case G8:
-            *y=7; return;
-    }
-    //row H
-    *x=7;
-    switch(square) {
-        case H1:
-            *y=0; return;
-        case H2:
-            *y=1; return;
-        case H3:
-            *y=2; return;
-        case H4:
-            *y=3; return;
-        case H5:
-            *y=4; return;
-        case H6:
-            *y=5; return;
-        case H7:
-            *y=6; return;
-        case H8:
-            *y=7; return;
-    }
-}
-
-
-void intToSquare(unsigned char x, unsigned char y, Square* square) {
-    switch(x) {
-        case 0: {
-            switch(y) {
-                case 0:
-                    *square = A1;
-                    return;
-                case 1:
-                    *square = A2;
-                    return;
-                case 2:
-                    *square = A3;
-                    return;
-                case 3:
-                    *square = A4;
-                    return;
-                case 4:
-                    *square = A5;
-                    return;
-                case 5:
-                    *square = A6;
-                    return;
-                case 6:
-                    *square = A7;
-                    return;
-                case 7:
-                    *square = A8;
-                    return;
-            }
-        }
-        case 1: {
-            switch(y) {
-                case 0:
-                    *square = B1;
-                    return;
-                case 1:
-                    *square = B2;
-                    return;
-                case 2:
-                    *square = B3;
-                    return;
-                case 3:
-                    *square = B4;
-                    return;
-                case 4:
-                    *square = B5;
-                    return;
-                case 5:
-                    *square = B6;
-                    return;
-                case 6:
-                    *square = B7;
-                    return;
-                case 7:
-                    *square = B8;
-                    return;
-            }
-        }
-        case 2: {
-            switch(y) {
-                case 0:
-                    *square = C1;
-                    return;
-                case 1:
-                    *square = C2;
-                    return;
-                case 2:
-                    *square = C3;
-                    return;
-                case 3:
-                    *square = C4;
-                    return;
-                case 4:
-                    *square = C5;
-                    return;
-                case 5:
-                    *square = C6;
-                    return;
-                case 6:
-                    *square = C7;
-                    return;
-                case 7:
-                    *square = C8;
-                    return;
-            }
-        }
-        case 3: {
-            switch(y) {
-                case 0:
-                    *square = D1;
-                    return;
-                case 1:
-                    *square = D2;
-                    return;
-                case 2:
-                    *square = D3;
-                    return;
-                case 3:
-                    *square = D4;
-                    return;
-                case 4:
-                    *square = D5;
-                    return;
-                case 5:
-                    *square = D6;
-                    return;
-                case 6:
-                    *square = D7;
-                    return;
-                case 7:
-                    *square = D8;
-                    return;
-            }
-        }
-        case 4: {
-            switch(y) {
-                case 0:
-                    *square = E1;
-                    return;
-                case 1:
-                    *square = E2;
-                    return;
-                case 2:
-                    *square = E3;
-                    return;
-                case 3:
-                    *square = E4;
-                    return;
-                case 4:
-                    *square = E5;
-                    return;
-                case 5:
-                    *square = E6;
-                    return;
-                case 6:
-                    *square = E7;
-                    return;
-                case 7:
-                    *square = E8;
-                    return;
-            }
-        }
-        case 5: {
-            switch(y) {
-                case 0:
-                    *square = F1;
-                    return;
-                case 1:
-                    *square = F2;
-                    return;
-                case 2:
-                    *square = F3;
-                    return;
-                case 3:
-                    *square = F4;
-                    return;
-                case 4:
-                    *square = F5;
-                    return;
-                case 5:
-                    *square = F6;
-                    return;
-                case 6:
-                    *square = F7;
-                    return;
-                case 7:
-                    *square = F8;
-                    return;
-            }
-        }
-        case 6: {
-            switch(y) {
-                case 0:
-                    *square = G1;
-                    return;
-                case 1:
-                    *square = G2;
-                    return;
-                case 2:
-                    *square = G3;
-                    return;
-                case 3:
-                    *square = G4;
-                    return;
-                case 4:
-                    *square = G5;
-                    return;
-                case 5:
-                    *square = G6;
-                    return;
-                case 6:
-                    *square = G7;
-                    return;
-                case 7:
-                    *square = G8;
-                    return;
-            }
-        }
-        case 7: {
-            switch(y) {
-                case 0:
-                    *square = H1;
-                    return;
-                case 1:
-                    *square = H2;
-                    return;
-                case 2:
-                    *square = H3;
-                    return;
-                case 3:
-                    *square = H4;
-                    return;
-                case 4:
-                    *square = H5;
-                    return;
-                case 5:
-                    *square = H6;
-                    return;
-                case 6:
-                    *square = H7;
-                    return;
-                case 7:
-                    *square = H8;
-                    return;
-            }
-        }
-    }
-}
-
 void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
     Color color = board[x1][y1].color;
     if(y2-y1==2) { //white pawn double move
@@ -791,28 +398,25 @@ void movePiece_King(Piece board[8][8], unsigned char x1, unsigned char y1, unsig
 }
 
 void movePiece(Piece board[8][8], Move move) {
-    int x1, y1, x2, y2;
-    squareToInt(move.from, &x1, &y1);
-    squareToInt(move.to, &x2, &y2);
-
-    switch(board[x1][y1].pieceType) {
+    //printf("x:%d, y:%d\n", move.from.x, move.from.y);
+    switch(board[move.from.x][move.from.y].pieceType) {
         case PAWN:
-            movePiece_Pawn(board, x1, y1, x2 ,y2);
+            movePiece_Pawn(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
         case KNIGHT:
-            movePiece_Knight(board, x1, y1, x2 ,y2);
+            movePiece_Knight(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
         case BISHOP:
-            movePiece_Bishop(board, x1, y1, x2 ,y2);
+            movePiece_Bishop(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
         case ROOK:
-            movePiece_Rook(board, x1, y1, x2 ,y2);
+            movePiece_Rook(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
         case QUEEN:
-            movePiece_Queen(board, x1, y1, x2 ,y2);
+            movePiece_Queen(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
         case KING:
-            movePiece_King(board, x1, y1, x2 ,y2);
+            movePiece_King(board, move.from.x, move.from.y, move.to.x ,move.to.y);
             break;
     }
     return;
@@ -821,25 +425,39 @@ void movePiece(Piece board[8][8], Move move) {
 
 void addMoveToList(unsigned char x1, unsigned char y1,
                    unsigned char x2, unsigned char y2,
-                   unsigned char** x1List, unsigned char** y1List,
-                   unsigned char** x2List, unsigned char** y2List,
+                   Move** moves,
                    int *index, int* size) {
     if(*index>=*size) {
         *size+=10;
-        *x1List = (unsigned char*) realloc(*x1List, (*size));
-        if(!*x1List) printf("x1List realloc failed");
-        *y1List = (unsigned char*) realloc(*y1List, (*size));
-        if(!*y1List) printf("y1List realloc failed");
-        *x2List = (unsigned char*) realloc(*x2List, (*size));
-        if(!*x2List) printf("x2List realloc failed");
-        *y2List = (unsigned char*) realloc(*y2List, (*size));
-        if(!*y2List) printf("y2List realloc failed");
+        (*moves) = (Move*) realloc(*moves, (sizeof(Move)*(*size)));
+        if(!*moves) printf("moves realloc failed");
     }
+    if(!isOnBoard(x2,y2)) {
+        printf("x1:%d, y1:%d, x2:%d, y2:%d\nindex:%d, size:%d\n",x1,y1,x2,y2,*index,*size);
+    }
+    (*moves)[*index].from.x=x1;
+    (*moves)[*index].from.y=y1;
+    (*moves)[*index].to.x=x2;
+    (*moves)[*index].to.y=y2;
+    (*index)++;
+    return;
+}
 
-    (*x1List)[*index]=x1;
-    (*y1List)[*index]=y1;
-    (*x2List)[*index]=x2;
-    (*y2List)[*index]=y2;
+void addMoveToList_Promotion(unsigned char x1, unsigned char y1,
+                   unsigned char x2, unsigned char y2,
+                   PieceType pieceType,
+                   Move** moves,
+                   int *index, int* size) {
+    if(*index>=*size) {
+        *size+=10;
+        *moves = (Move*) realloc(*moves, (sizeof(Move)*(*size)));
+        if(!*moves) printf("moves realloc failed");
+    }
+    (*moves)[*index].from.x=x1;
+    (*moves)[*index].from.y=y1;
+    (*moves)[*index].to.x=x2;
+    (*moves)[*index].to.y=y2;
+    (*moves)[*index].promoteTo=pieceType;
 
     (*index)++;
     return;
@@ -989,16 +607,13 @@ bool checkMove_Castle(Piece board[8][8],
 
 void getMoves_Pawn_White(Piece board[8][8],
                   int x, int y,
-                  unsigned char** x1List,
-                  unsigned char** y1List,
-                  unsigned char** x2List,
-                  unsigned char** y2List,
+                  Move** moves,
                   int* index,
                   int* size) {
     if(isOnBoard(x, y+1)) {
         if(board[x][y+1].pieceType==EMPTY) {
             if(checkMove_Pawn(board, WHITE, x, y, x, y+1)) {
-                addMoveToList(x, y, x, y+1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x, y+1, moves, index, size);
             }
         }
     }
@@ -1006,31 +621,31 @@ void getMoves_Pawn_White(Piece board[8][8],
         if(board[x][y+1].pieceType==EMPTY &&
            board[x][y+2].pieceType==EMPTY) {
             if(checkMove_Pawn(board, WHITE, x, y, x, y+2)) {
-                addMoveToList(x, y, x, y+2, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x, y+2, moves, index, size);
             }
        }
     }
     if(isOnBoard(x-1, y+1)) {
         if(board[x][y].canEnpassante_left) {
             if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
-                addMoveToList(x, y, x-1, y+1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x-1, y+1, moves, index, size);
             }
             board[x][y].canEnpassante_left=false;
         } else if(board[x-1][y+1].color==BLACK) {
             if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
-                addMoveToList(x, y, x-1, y+1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x-1, y+1, moves, index, size);
             }
         }
     }
     if(isOnBoard(x+1, y+1)) {
         if(board[x][y].canEnpassante_right) {
             if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) {
-                addMoveToList(x, y, x+1, y+1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x+1, y+1, moves, index, size);
             }
             board[x][y].canEnpassante_right=false;
         } else if(board[x+1][y+1].color==BLACK) {
             if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) { 
-                addMoveToList(x, y, x+1, y+1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x+1, y+1, moves, index, size);
             }
         }
     }
@@ -1039,16 +654,13 @@ void getMoves_Pawn_White(Piece board[8][8],
 
 void getMoves_Pawn_Black(Piece board[8][8],
                   int x, int y,
-                  unsigned char** x1List,
-                  unsigned char** y1List,
-                  unsigned char** x2List,
-                  unsigned char** y2List,
+                  Move** moves,
                   int* index,
                   int* size) {
     if(isOnBoard(x, y-1)) {
         if(board[x][y-1].pieceType==EMPTY) {
             if(checkMove_Pawn(board, BLACK, x, y, x, y-1)) {
-                addMoveToList(x, y, x, y-1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x, y-1, moves, index, size);
             }
         }
     }
@@ -1056,44 +668,54 @@ void getMoves_Pawn_Black(Piece board[8][8],
         if(board[x][y-1].pieceType==EMPTY &&
            board[x][y-2].pieceType==EMPTY) {
             if(checkMove_Pawn(board, BLACK, x, y, x, y-2)) {
-                addMoveToList(x, y, x, y-2, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x, y-2, moves, index, size);
             }
        }
     }
     if(isOnBoard(x-1, y-1)) {
         if(board[x][y].canEnpassante_left) {
             if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
-                addMoveToList(x, y, x-1, y-1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x-1, y-1, moves, index, size);
             }
             board[x][y].canEnpassante_left=false;
         } else if(board[x-1][y-1].color==WHITE) {
             if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
-                addMoveToList(x, y, x-1, y-1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x-1, y-1, moves, index, size);
             }
         }
     }
     if(isOnBoard(x+1, y-1)) {
         if(board[x][y].canEnpassante_right) {
             if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
-                addMoveToList(x, y, x+1, y-1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x+1, y-1, moves, index, size);
             }
             board[x][y].canEnpassante_right=false;
         } else if(board[x+1][y-1].color==WHITE) {
             if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
-                addMoveToList(x, y, x+1, y-1, x1List, y1List, x2List, y2List, index, size);
+                addMoveToList(x, y, x+1, y-1, moves, index, size);
             }
         }
     }
     return;
 }
 
+void getMoves_Pawn(Piece board[8][8],
+                   Color color,
+                   int x, int y,
+                   Move** moves,
+                   int* index,
+                   int* size) {
+    if(color==WHITE) {
+        getMoves_Pawn_White(board, x, y, moves, index, size);
+    } else {
+        getMoves_Pawn_Black(board, x, y, moves, index, size);
+    }
+}
+
 void getMoves_Knight(Piece board[8][8],
                   Color color,
                   int x, int y,
-                  unsigned char** x1List,
-                  unsigned char** y1List,
-                  unsigned char** x2List,
-                  unsigned char** y2List,
+                  Move** moves,
                   int* index,
                   int* size) {
 
@@ -1108,7 +730,7 @@ void getMoves_Knight(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].color==EMPTY||board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             }
         }
@@ -1118,10 +740,7 @@ void getMoves_Knight(Piece board[8][8],
 void getMoves_Diagonal(Piece board[8][8],
                        Color color,
                        int x, int y,
-                       unsigned char** x1List,
-                       unsigned char** y1List,
-                       unsigned char** x2List,
-                       unsigned char** y2List,
+                       Move** moves,
                        int* index,
                        int* size) {
     int x2, y2;
@@ -1131,11 +750,11 @@ void getMoves_Diagonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1151,11 +770,11 @@ void getMoves_Diagonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1171,11 +790,11 @@ void getMoves_Diagonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1191,11 +810,11 @@ void getMoves_Diagonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1211,10 +830,7 @@ void getMoves_Diagonal(Piece board[8][8],
 void getMoves_Orthogonal(Piece board[8][8],
                          Color color,
                          int x, int y,
-                         unsigned char** x1List,
-                         unsigned char** y1List,
-                         unsigned char** x2List,
-                         unsigned char** y2List,
+                         Move** moves,
                          int* index,
                          int* size) {
     int x2, y2;
@@ -1225,11 +841,11 @@ void getMoves_Orthogonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1244,11 +860,11 @@ void getMoves_Orthogonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1265,11 +881,11 @@ void getMoves_Orthogonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1284,11 +900,11 @@ void getMoves_Orthogonal(Piece board[8][8],
         if(isOnBoard(x2, y2)) {
             if(board[x2][y2].pieceType==EMPTY) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
             } else if(board[x2][y2].color!=color) {
                 if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, x2, y2, moves, index, size);
                 }
                 break;
             } else {
@@ -1305,50 +921,38 @@ void getMoves_Orthogonal(Piece board[8][8],
 void getMoves_Bishop(Piece board[8][8],
                      Color color,
                      int x, int y,
-                     unsigned char** x1List,
-                     unsigned char** y1List,
-                     unsigned char** x2List,
-                     unsigned char** y2List,
+                     Move** moves,
                      int* index,
                      int* size) {
-    getMoves_Diagonal(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+    getMoves_Diagonal(board, color, x, y, moves, index, size);
     return;
 }
 
 void getMoves_Rook(Piece board[8][8],
                    Color color,
                    int x, int y,
-                   unsigned char** x1List,
-                   unsigned char** y1List,
-                   unsigned char** x2List,
-                   unsigned char** y2List,
+                   Move** moves,
                    int* index,
                    int* size) {
-    getMoves_Orthogonal(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+    getMoves_Orthogonal(board, color, x, y, moves, index, size);
     return;
 }
 
 void getMoves_Queen(Piece board[8][8],
                     Color color,
                     int x, int y,
-                    unsigned char** x1List,
-                    unsigned char** y1List,
-                    unsigned char** x2List,
-                    unsigned char** y2List,
+                    Move** moves,
                     int* index,
                     int* size) {
-    getMoves_Diagonal(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
-    getMoves_Orthogonal(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+    getMoves_Diagonal(board, color, x, y, moves, index, size);
+    getMoves_Orthogonal(board, color, x, y, moves, index, size);
     return;
 }
 
 void getMoves_King(Piece board[8][8],
                    Color color,
                    int x, int y,
-                   unsigned char** x1List,
-                   unsigned char** y1List,
-                   unsigned char** x2List,
-                   unsigned char** y2List,
+                   Move** moves,
                    int* index,
                    int* size) {
     int x2, y2;
@@ -1358,7 +962,7 @@ void getMoves_King(Piece board[8][8],
             if(isOnBoard(x2, y2)) {
                 if(board[x2][y2].color!=color) {
                     if(checkMove(board, color, x, y, x2, y2)) {
-                        addMoveToList(x, y, x2, y2, x1List, y1List, x2List, y2List, index, size);
+                        addMoveToList(x, y, x2, y2, moves, index, size);
                     }
                 }
             }
@@ -1370,7 +974,7 @@ void getMoves_King(Piece board[8][8],
                board[2][y].color==NONE &&
                board[3][y].color==NONE) {
                 if(checkMove_Castle(board, color, x, y, 2, y)) {
-                    addMoveToList(x, y, 2, y, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, 2, y, moves, index, size);
                 }
             }
         }
@@ -1378,87 +982,52 @@ void getMoves_King(Piece board[8][8],
             if(board[5][y].color==NONE &&
                board[6][y].color==NONE) {
                 if(checkMove_Castle(board, color, x, y, 6, y)) {
-                    addMoveToList(x, y, 6, y, x1List, y1List, x2List, y2List, index, size);
+                    addMoveToList(x, y, 6, y, moves, index, size);
                 }
             }
         }
     }
 }
 
-void intToSquareMoveList(unsigned char* x1List,
-                         unsigned char* y1List,
-                         unsigned char* x2List,
-                         unsigned char* y2List,
-                         int index,
-                         Move** moveList) {
-    (*moveList) = (Move*) malloc(index*sizeof(Move));
-    Square square;
-    for(int i=0; i<index; i++) {
-        intToSquare(x1List[i], y1List[i], &square);
-        (*moveList)[i].from = square;
-        intToSquare(x2List[i], y2List[i], &square);
-        (*moveList)[i].to = square;
-    }
-    return;
-}
-
 void getMoves_FromSquare(Piece board[8][8],
                         Color color,
                         int x, int y,
-                        unsigned char** x1List,
-                        unsigned char** y1List,
-                        unsigned char** x2List,
-                        unsigned char** y2List,
+                        Move** moves,
                         int* index,
                         int* size) {
     
     switch(board[x][y].pieceType) {
-        case PAWN: {
-            if(color==WHITE) {
-                getMoves_Pawn_White(board, x, y, x1List, y1List, x2List, y2List, index, size);
-                break;
-            }
-            getMoves_Pawn_Black(board, x, y, x1List, y1List, x2List, y2List, index, size);
+        case PAWN:
+            getMoves_Pawn(board, color, x, y, moves, index, size);
             break;
-        }
         case KNIGHT:
-            getMoves_Knight(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+            getMoves_Knight(board, color, x, y, moves, index, size);
             break;
         case BISHOP:
-            getMoves_Bishop(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+            getMoves_Bishop(board, color, x, y, moves, index, size);
             break;
         case ROOK:
-            getMoves_Rook(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+            getMoves_Rook(board, color, x, y, moves, index, size);
             break;
         case QUEEN:
-            getMoves_Queen(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+            getMoves_Queen(board, color, x, y, moves, index, size);
             break;
         case KING:
-            getMoves_King(board, color, x, y, x1List, y1List, x2List, y2List, index, size);
+            getMoves_King(board, color, x, y, moves, index, size);
             break;
     }
     return;
 }
 
 
-int getMoves(Piece board[8][8], Color color, Move** moveList) {
+int getMoves(Piece board[8][8], Color color, Move** moves) {
     int index = 0, size = 10;
-    unsigned char *x1List, *y1List, *x2List, *y2List;
-    x1List = (unsigned char*)malloc(size);
-    y1List = (unsigned char*)malloc(size);
-    x2List = (unsigned char*)malloc(size);
-    y2List = (unsigned char*)malloc(size);
     for(int j=0; j<8; j++) {
         for(int i=0; i<8; i++) {
             if(board[i][j].color==color) {
-                getMoves_FromSquare(board, color, i, j, &x1List, &y1List, &x2List, &y2List, &index, &size);
+                getMoves_FromSquare(board, color, i, j, moves, &index, &size);
             }
         }
     }
-    intToSquareMoveList(x1List, y1List, x2List, y2List, index, moveList);
-    free(x2List);
-    free(x1List);
-    free(y1List);
-    free(y2List);
     return index;
 }
