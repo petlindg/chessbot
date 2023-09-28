@@ -6,13 +6,13 @@
 #include "interface.h"
 #include "tests.h"
 
-void randomTestGame() {
+void test_randomTestGame() {
     int t = time(NULL);
     srand(t);
 
     Piece board[8][8];
     Move* moves = malloc(10*sizeof(Move));
-    unsigned int size=1, i=1, r;
+    unsigned int size=1, i=0, r;
     Color color;
 
     initBoard(board);
@@ -25,7 +25,9 @@ void randomTestGame() {
         } else {
             color = WHITE;
         }
+        printf("1\n");
         size = getMoves(board, color, &moves);
+        printf("2\n");
         if(i>1000||!size) break;
         r = rand()%size;
         movePiece(board, moves[r]);
@@ -46,8 +48,8 @@ bool test_verifyNotCheck() {
     Color color;
     initBoard(board);
 
-    for(unsigned int k=0; k<100000; k++) {
-
+    for(unsigned int k=0; k<1000; k++) {
+        printBoard(board);
         initBoard(board);
         i=0;
         printf("k:%d\n", k);

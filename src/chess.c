@@ -108,61 +108,61 @@ void initTestBoard2(Piece board[8][8]) {
     initPiece(&board[3][3], KING, WHITE);
 }
 
-void findKing(Piece board[8][8], Color color, int* kingPosX, int* kingPosY) {
+void findKing(Piece board[8][8], Color color, Square* kingPos) {
     for(int i=0; i<8; i++) {
         for(int j=0; j<8; j++) {
             if(board[i][j].pieceType==KING && board[i][j].color == color) {
-                *kingPosX = i;
-                *kingPosY = j;
+                kingPos->x=i;
+                kingPos->y=j;
                 return;
             }
         }
     }
 }
 
-bool isOnBoard(int x, int y) {
-    return (x>=0&&x<8)&&(y>=0&&y<8);
+bool isOnBoard(Square square) {
+    return (square.x>=0&&square.x<8)&&(square.y>=0&&square.y<8);
 }
 
-bool isCheck_Horizontal(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
+bool isCheck_Horizontal(Piece board[8][8], Color color, Square kingPos) {
     //check left of king
-    for(int i=kingPosX-1; i>=0; i--) {
-        if((board[i][kingPosY].pieceType==ROOK ||
-           board[i][kingPosY].pieceType==QUEEN) &&
-          (board[i][kingPosY].color != color))
+    for(int i=kingPos.x-1; i>=0; i--) {
+        if((board[i][kingPos.y].pieceType==ROOK ||
+           board[i][kingPos.y].pieceType==QUEEN) &&
+          (board[i][kingPos.y].color != color))
             return true;
-        if(board[i][kingPosY].pieceType!=EMPTY) break;
+        if(board[i][kingPos.y].pieceType!=EMPTY) break;
     }
     //check right of king
-    for(int i=kingPosX+1; i<8; i++) {
-        if((board[i][kingPosY].pieceType==ROOK ||
-           board[i][kingPosY].pieceType==QUEEN) &&
-          (board[i][kingPosY].color != color))
+    for(int i=kingPos.x+1; i<8; i++) {
+        if((board[i][kingPos.y].pieceType==ROOK ||
+           board[i][kingPos.y].pieceType==QUEEN) &&
+          (board[i][kingPos.y].color != color))
             return true;
-        if(board[i][kingPosY].pieceType!=EMPTY) break;
+        if(board[i][kingPos.y].pieceType!=EMPTY) break;
     }
     //check down of king
-    for(int j=kingPosY-1; j>=0; j--) {
-        if((board[kingPosX][j].pieceType==ROOK ||
-           board[kingPosX][j].pieceType==QUEEN) &&
-          (board[kingPosX][j].color != color))
+    for(int j=kingPos.y-1; j>=0; j--) {
+        if((board[kingPos.x][j].pieceType==ROOK ||
+           board[kingPos.x][j].pieceType==QUEEN) &&
+          (board[kingPos.x][j].color != color))
             return true;
-        if(board[kingPosX][j].pieceType!=EMPTY) break;
+        if(board[kingPos.x][j].pieceType!=EMPTY) break;
     }
     //check up of king
-    for(int j=kingPosY+1; j<8; j++) {
-        if((board[kingPosX][j].pieceType==ROOK ||
-           board[kingPosX][j].pieceType==QUEEN) &&
-          (board[kingPosX][j].color != color))
+    for(int j=kingPos.y+1; j<8; j++) {
+        if((board[kingPos.x][j].pieceType==ROOK ||
+           board[kingPos.x][j].pieceType==QUEEN) &&
+          (board[kingPos.x][j].color != color))
             return true;
-        if(board[kingPosX][j].pieceType!=EMPTY) break;
+        if(board[kingPos.x][j].pieceType!=EMPTY) break;
     }
     return false;
 }
 
-bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
+bool isCheck_Vertical(Piece board[8][8], Color color, Square kingPos) {
     //check down left of king
-    for(int i=kingPosX-1, j=kingPosY-1; i>=0&&j>=0; i--, j--) {
+    for(int i=kingPos.x-1, j=kingPos.y-1; i>=0&&j>=0; i--, j--) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
           (board[i][j].color != color)) {
@@ -171,7 +171,7 @@ bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check down right of king
-    for(int i=kingPosX+1, j=kingPosY-1; i<8&&j>=0; i++, j--) {
+    for(int i=kingPos.x+1, j=kingPos.y-1; i<8&&j>=0; i++, j--) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
           (board[i][j].color != color)) {
@@ -180,7 +180,7 @@ bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check up left of king
-    for(int i=kingPosX-1, j=kingPosY+1; i>=0&&j<8; i--, j++) {
+    for(int i=kingPos.x-1, j=kingPos.y+1; i>=0&&j<8; i--, j++) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
           (board[i][j].color != color)) {
@@ -189,7 +189,7 @@ bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY
         if(board[i][j].pieceType!=EMPTY) break;
     }
     //check up right of king
-    for(int i=kingPosX+1, j=kingPosY+1; i<8&&j<8; i++, j++) {
+    for(int i=kingPos.x+1, j=kingPos.y+1; i<8&&j<8; i++, j++) {
         if((board[i][j].pieceType==BISHOP ||
            board[i][j].pieceType==QUEEN) &&
           (board[i][j].color != color)) {
@@ -200,140 +200,127 @@ bool isCheck_Vertical(Piece board[8][8], Color color, int kingPosX, int kingPosY
     return false;
 }
 
-bool isCheck_Pawn(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
+bool isCheck_Pawn(Piece board[8][8], Color color, Square kingPos) {
+    Square threat;
     if(color==WHITE) {
-        if(isOnBoard(kingPosX-1, kingPosY+1)) {
-            if(board[kingPosX-1][kingPosY+1].pieceType==PAWN &&
-               board[kingPosX-1][kingPosY+1].color==BLACK) {
+        threat.x=kingPos.x-1;
+        threat.y=kingPos.y+1;
+        if(isOnBoard(threat)) {
+            if(board[threat.x][threat.y].pieceType==PAWN &&
+               board[threat.x][threat.y].color==BLACK) {
                 return true;
             }
         }
-        if(isOnBoard(kingPosX+1, kingPosY+1)) {
-            if(board[kingPosX+1][kingPosY+1].pieceType==PAWN &&
-               board[kingPosX+1][kingPosY+1].color==BLACK) {
+        threat.x=kingPos.x+1;
+        if(isOnBoard(threat)) {
+            if(board[threat.x][threat.y].pieceType==PAWN &&
+               board[threat.x][threat.y].color==BLACK) {
                 return true;
             }
         }
         return false;
-    } //else color==BLACK;
-    if(isOnBoard(kingPosX-1, kingPosY-1)) {
-        if(board[kingPosX-1][kingPosY-1].pieceType==PAWN &&
-           board[kingPosX-1][kingPosY-1].color==WHITE) {
+    }
+    //else color==BLACK;
+    threat.x=kingPos.x-1;
+    threat.y=kingPos.y-1;
+    if(isOnBoard(threat)) {
+        if(board[threat.x][threat.y].pieceType==PAWN &&
+           board[threat.x][threat.y].color==WHITE) {
             return true;
         }
     }
-    if(isOnBoard(kingPosX+1, kingPosY-1)) {
-        if(board[kingPosX+1][kingPosY-1].pieceType==PAWN &&
-           board[kingPosX+1][kingPosY-1].color==WHITE) {
-            return true;
-        }
-    }
-    return false;
-}
-
-bool isCheck_Knight(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
-    if(isOnBoard(kingPosX-1, kingPosY+2)) {
-        if(board[kingPosX-1][kingPosY+2].pieceType==KNIGHT &&
-           board[kingPosX-1][kingPosY+2].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX+1, kingPosY+2)) {
-        if(board[kingPosX+1][kingPosY+2].pieceType==KNIGHT &&
-           board[kingPosX+1][kingPosY+2].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX-2, kingPosY+1)) {
-        if(board[kingPosX-2][kingPosY+1].pieceType==KNIGHT &&
-           board[kingPosX-2][kingPosY+1].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX+2, kingPosY+1)) {
-        if(board[kingPosX+2][kingPosY+1].pieceType==KNIGHT &&
-           board[kingPosX+2][kingPosY+1].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX-2, kingPosY-1)) {
-        if(board[kingPosX-2][kingPosY-1].pieceType==KNIGHT &&
-           board[kingPosX-2][kingPosY-1].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX+2, kingPosY-1)) {
-        if(board[kingPosX+2][kingPosY-1].pieceType==KNIGHT &&
-           board[kingPosX+2][kingPosY-1].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX-1, kingPosY-2)) {
-        if(board[kingPosX-1][kingPosY-2].pieceType==KNIGHT &&
-           board[kingPosX-1][kingPosY-2].color!=color) {
-            return true;
-        }
-    }
-    if(isOnBoard(kingPosX+1, kingPosY-2)) {
-        if(board[kingPosX+1][kingPosY-2].pieceType==KNIGHT &&
-           board[kingPosX+1][kingPosY-2].color!=color) {
+    threat.x=kingPos.x+1;
+    if(isOnBoard(threat)) {
+        if(board[threat.x][threat.y].pieceType==PAWN &&
+           board[threat.x][threat.y].color==WHITE) {
             return true;
         }
     }
     return false;
 }
 
-bool isCheck_King(Piece board[8][8], Color color, int kingPosX, int kingPosY) {
-    for(int i=kingPosX-1; i<kingPosX+2; i++) {
-        for(int j=kingPosY-1; j<kingPosY+2; j++) {
-            if(isOnBoard(i,j)) {
-                if(board[i][j].pieceType==KING &&
-                   board[i][j].color!=color) {
+bool isCheck_Knight(Piece board[8][8], Color color, Square kingPos) {
+
+    int xOffsetList[] = {-1, 1, -2, 2, -2, 2, -1, 1};
+    int yOffsetList[] = {2, 2, 1, 1, -1, -1, -2, -2};
+    int len = 8;
+    Square threat;
+
+    for(int i = 0; i<len; i++) {
+        threat.x=kingPos.x+xOffsetList[i];
+        threat.y=kingPos.y+yOffsetList[i];
+        if(isOnBoard(threat)) {
+            if(board[threat.x][threat.y].pieceType==KNIGHT &&
+               board[threat.x][threat.y].color!=color) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool isCheck_King(Piece board[8][8], Color color, Square kingPos) {
+    Square threat;
+    for(int i=kingPos.x-1; i<kingPos.x+2; i++) {
+        for(int j=kingPos.y-1; j<kingPos.y+2; j++) {
+            threat.x=i;
+            threat.y=j;
+            if(isOnBoard(threat)) {
+                if(board[threat.x][threat.y].pieceType==KING &&
+                   board[threat.x][threat.y].color!=color) {
                     return true;
                 }
             }
         }
     }
+
     return false;
 }
 
 bool isCheck(Piece board[8][8], Color color) {
-    int kingPosX, kingPosY;
-    findKing(board, color, &kingPosX, &kingPosY);
-    if(isCheck_Horizontal(board, color, kingPosX, kingPosY)) return true;
-    if(isCheck_Vertical(board, color, kingPosX, kingPosY)) return true;
-    if(isCheck_Pawn(board, color, kingPosX, kingPosY)) return true;
-    if(isCheck_Knight(board, color, kingPosX, kingPosY)) return true;
-    if(isCheck_King(board, color, kingPosX, kingPosY)) return true;
+    Square kingPos;
+    findKing(board, color, &kingPos);
+    if(isCheck_Horizontal(board, color, kingPos)) return true;
+    if(isCheck_Vertical(board, color, kingPos)) return true;
+    if(isCheck_Pawn(board, color, kingPos)) return true;
+    if(isCheck_Knight(board, color, kingPos)) return true;
+    if(isCheck_King(board, color, kingPos)) return true;
     return false;
 }
 
 void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
     Color color = board[x1][y1].color;
+    Square sq;
+    sq.y=y2;
     if(y2-y1==2) { //white pawn double move
-        if(isOnBoard(x2-1,y2)) { //check left, set left enPassante right
-            if(board[x2-1][y2].pieceType==PAWN &&
-               board[x2-1][y2].color!=color) {
-                board[x2-1][y2].canEnpassante_right=true;
+        sq.x=x2-1;
+        if(isOnBoard(sq)) { //check left, set left enPassante right
+            if(board[sq.x][sq.y].pieceType==PAWN &&
+               board[sq.x][sq.y].color!=color) {
+                board[sq.x][sq.y].canEnpassante_right=true;
             }
         }
-        if(isOnBoard(x2+1,y2)) {//check right, set right enPassante left
-            if(board[x2+1][y2].pieceType==PAWN &&
-               board[x2+1][y2].color!=color) {
-                board[x2+1][y2].canEnpassante_left=true;
+        sq.x=x2+1;
+        if(isOnBoard(sq)) { //check left, set left enPassante right
+            if(board[sq.x][sq.y].pieceType==PAWN &&
+               board[sq.x][sq.y].color!=color) {
+                board[sq.x][sq.y].canEnpassante_left=true;
             }
         }
     } else if(y1-y2==2) { //black pawn double move
-        if(isOnBoard(x2-1,y2)) { //check left, set left enPassante right
-            if(board[x2-1][y2].pieceType==PAWN &&
-               board[x2-1][y2].color!=color) {
-                board[x2-1][y2].canEnpassante_right=true;
+        sq.x=x2-1;
+        if(isOnBoard(sq)) { //check left, set left enPassante right
+            if(board[sq.x][sq.y].pieceType==PAWN &&
+               board[sq.x][sq.y].color!=color) {
+                board[sq.x][sq.y].canEnpassante_right=true;
             }
         }
-        if(isOnBoard(x2+1,y2)) { //check right, set right enPassante left
-            if(board[x2+1][y2].pieceType==PAWN &&
-               board[x2+1][y2].color!=color) {
-                board[x2+1][y2].canEnpassante_left=true;
+        sq.x=x2+1;
+        if(isOnBoard(sq)) { //check left, set left enPassante right
+            if(board[sq.x][sq.y].pieceType==PAWN &&
+               board[sq.x][sq.y].color!=color) {
+                board[sq.x][sq.y].canEnpassante_left=true;
             }
         }
     } else if(x1!=x2) {
@@ -423,27 +410,23 @@ void movePiece(Piece board[8][8], Move move) {
 }
 
 
-void addMoveToList(unsigned char x1, unsigned char y1,
-                   unsigned char x2, unsigned char y2,
-                   Move** moves,
-                   int *index, int* size) {
+void addMove(Move* move, Move** moves, int *index, int* size) {
     if(*index>=*size) {
         *size+=10;
         (*moves) = (Move*) realloc(*moves, (sizeof(Move)*(*size)));
-        if(!*moves) printf("moves realloc failed");
+        if(!*moves) {
+            printf("moves realloc failed");
+            exit(0);
+        }
     }
-    if(!isOnBoard(x2,y2)) {
-        printf("x1:%d, y1:%d, x2:%d, y2:%d\nindex:%d, size:%d\n",x1,y1,x2,y2,*index,*size);
-    }
-    (*moves)[*index].from.x=x1;
-    (*moves)[*index].from.y=y1;
-    (*moves)[*index].to.x=x2;
-    (*moves)[*index].to.y=y2;
+
+    (*moves)[*index]=*move;
+
     (*index)++;
     return;
 }
 
-void addMoveToList_Promotion(unsigned char x1, unsigned char y1,
+void addMove_Promotion(unsigned char x1, unsigned char y1,
                    unsigned char x2, unsigned char y2,
                    PieceType pieceType,
                    Move** moves,
@@ -463,29 +446,14 @@ void addMoveToList_Promotion(unsigned char x1, unsigned char y1,
     return;
 }
 
-//checks if a move is valid, returns true if it is, false if it isn't
-bool checkMove(Piece board[8][8],
-               Color color,
-               int x1, int y1,
-               int x2, int y2) {
-    Piece tmp1 = board[x1][y1];
-    Piece tmp2 = board[x2][y2];
-    board[x2][y2]=board[x1][y1];
-    initPiece_Empty(&board[x1][y1]);
-    if(isCheck(board, color)) {
-       board[x1][y1]=tmp1;
-       board[x2][y2]=tmp2;
-       return false; 
-    }
-    board[x1][y1]=tmp1;
-    board[x2][y2]=tmp2;
-    return true;
-}
 
 bool checkMove_Pawn(Piece board[8][8],
                     Color color,
-                    int x1, int y1,
-                    int x2, int y2) {
+                    Move* move) {
+    unsigned char x1 = move->from.x;
+    unsigned char y1 = move->from.y;
+    unsigned char x2 = move->to.x;
+    unsigned char y2 = move->to.y;
     Piece tmp1 = board[x1][y1];
     Piece tmp2 = board[x2][y2];
     if(x1==x2) {
@@ -545,11 +513,15 @@ bool checkMove_Pawn(Piece board[8][8],
 
 bool checkMove_Castle(Piece board[8][8],
                       Color color,
-                      int x1, int y1,
-                      int x2, int y2) {
+                      Move* move) {
     if(isCheck(board, color)) {
         return false;
     }
+    unsigned char x1 = move->from.x;
+    unsigned char y1 = move->from.y;
+    unsigned char x2 = move->to.x;
+    unsigned char y2 = move->to.y;
+
     Piece tmp1 = board[x1][y1];
     if(x1-x2==2) {//castle queen side
 
@@ -605,116 +577,192 @@ bool checkMove_Castle(Piece board[8][8],
     }
 }
 
+bool checkMove_Default(Piece board[8][8],
+                        Color color,
+                        Move* move) {
+    unsigned char x1 = move->from.x;
+    unsigned char y1 = move->from.y;
+    unsigned char x2 = move->to.x;
+    unsigned char y2 = move->to.y;
+    Piece tmp1 = board[x1][y1];
+    Piece tmp2 = board[x2][y2];
+    board[x2][y2]=board[x1][y1];
+    initPiece_Empty(&board[x1][y1]);
+    if(isCheck(board, color)) {
+       board[x1][y1]=tmp1;
+       board[x2][y2]=tmp2;
+       return false; 
+    }
+    board[x1][y1]=tmp1;
+    board[x2][y2]=tmp2;
+    return true;
+}
+
+
+//checks if a move is valid, returns true if it is, false if it isn't
+bool checkMove(Piece board[8][8],
+               Color color,
+               Move* move) {
+
+    PieceType type = board[move->from.x][move->from.y].pieceType;
+    if(type==PAWN) {
+        return checkMove_Pawn(board, color, move);
+    }
+    if(type==KING&&(move->from.x-move->to.x==2||move->to.x-move->from.x==2)) {
+        return checkMove_Castle(board, color, move);
+    }
+    else {
+        return checkMove(board, color, move);
+    }
+}
+
+
+void maybeAddMove(Piece board[8][8], Move* move, Color color, Move** moves, int* index, int* size) {
+    if(checkMove(board, color, move)) {
+        addMove(move, moves, index, size);
+    }
+    return;
+}
+
 void getMoves_Pawn_White(Piece board[8][8],
-                  int x, int y,
+                  Square from,
                   Move** moves,
                   int* index,
                   int* size) {
-    if(isOnBoard(x, y+1)) {
-        if(board[x][y+1].pieceType==EMPTY) {
-            if(checkMove_Pawn(board, WHITE, x, y, x, y+1)) {
-                addMoveToList(x, y, x, y+1, moves, index, size);
+    Move move;
+    move.from = from;
+
+    //Add default moves and promotion through default moves
+    move.to.x=from.x;
+    move.to.y=from.y+1;
+    printMove(move);
+    if(isOnBoard(move.to)) {
+        if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+            if(checkMove(board, WHITE, &move)) {
+                if(move.to.y==7) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
             }
         }
     }
-    if(y==1) {
-        if(board[x][y+1].pieceType==EMPTY &&
-           board[x][y+2].pieceType==EMPTY) {
-            if(checkMove_Pawn(board, WHITE, x, y, x, y+2)) {
-                addMoveToList(x, y, x, y+2, moves, index, size);
-            }
+    //Add take moves left
+    move.to.x=from.x-1;
+    if(isOnBoard(move.to)) {
+        if(board[move.from.x][move.from.y].canEnpassante_left) {
+            maybeAddMove(board, &move, WHITE, moves, index, size);
+            board[move.from.x][move.from.y].canEnpassante_left=false;
+        } else if(board[move.to.x][move.to.y].color==BLACK) {
+            maybeAddMove(board, &move, WHITE, moves, index, size);
+        }
+    }
+    //Add take moves right
+    move.to.x=from.x+1;
+    if(isOnBoard(move.to)) {
+        if(board[move.from.x][move.from.y].canEnpassante_right) {
+            maybeAddMove(board, &move, WHITE, moves, index, size);
+            board[move.from.x][move.from.y].canEnpassante_right=false;
+        } else if(board[move.to.x][move.to.y].color==BLACK) {
+            maybeAddMove(board, &move, WHITE, moves, index, size);
+        }
+    }
+    //Add double moves
+    move.to.x=move.from.x;
+    move.to.y=from.y+2;
+    if(move.from.y==1) {
+        if(board[move.to.x][move.to.y-1].pieceType==EMPTY &&
+           board[move.to.x][move.to.y].pieceType==EMPTY) {
+            maybeAddMove(board, &move, WHITE, moves, index, size);
        }
-    }
-    if(isOnBoard(x-1, y+1)) {
-        if(board[x][y].canEnpassante_left) {
-            if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
-                addMoveToList(x, y, x-1, y+1, moves, index, size);
-            }
-            board[x][y].canEnpassante_left=false;
-        } else if(board[x-1][y+1].color==BLACK) {
-            if(checkMove_Pawn(board, WHITE, x, y, x-1, y+1)) {
-                addMoveToList(x, y, x-1, y+1, moves, index, size);
-            }
-        }
-    }
-    if(isOnBoard(x+1, y+1)) {
-        if(board[x][y].canEnpassante_right) {
-            if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) {
-                addMoveToList(x, y, x+1, y+1, moves, index, size);
-            }
-            board[x][y].canEnpassante_right=false;
-        } else if(board[x+1][y+1].color==BLACK) {
-            if(checkMove_Pawn(board, WHITE, x, y, x+1, y+1)) { 
-                addMoveToList(x, y, x+1, y+1, moves, index, size);
-            }
-        }
     }
     return;
 }
 
 void getMoves_Pawn_Black(Piece board[8][8],
-                  int x, int y,
+                  Square from,
                   Move** moves,
                   int* index,
                   int* size) {
-    if(isOnBoard(x, y-1)) {
-        if(board[x][y-1].pieceType==EMPTY) {
-            if(checkMove_Pawn(board, BLACK, x, y, x, y-1)) {
-                addMoveToList(x, y, x, y-1, moves, index, size);
+    Move move;
+    move.from = from;
+
+    //Add default moves and promotion through default moves
+    move.to.x=move.from.x;
+    move.to.y=move.from.y-1;
+    if(isOnBoard(move.to)) {
+        if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+            if(checkMove(board, BLACK, &move)) {
+                if(move.to.y==0) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
             }
         }
     }
-    if(y==6) {
-        if(board[x][y-1].pieceType==EMPTY &&
-           board[x][y-2].pieceType==EMPTY) {
-            if(checkMove_Pawn(board, BLACK, x, y, x, y-2)) {
-                addMoveToList(x, y, x, y-2, moves, index, size);
-            }
+    //Add take moves left
+    move.to.x=move.from.x-1;
+    if(isOnBoard(move.to)) {
+        if(board[move.from.x][move.from.y].canEnpassante_left) {
+            maybeAddMove(board, &move, BLACK, moves, index, size);
+            board[move.from.x][move.from.y].canEnpassante_left=false;
+        } else if(board[move.to.x][move.to.y].color==WHITE) {
+            maybeAddMove(board, &move, BLACK, moves, index, size);
+        }
+    }
+    //Add take moves right
+    move.to.x=from.x+1;
+    if(isOnBoard(move.to)) {
+        if(board[move.from.x][move.from.y].canEnpassante_right) {
+            maybeAddMove(board, &move, BLACK, moves, index, size);
+            board[move.from.x][move.from.y].canEnpassante_right=false;
+        } else if(board[move.to.x][move.to.y].color==WHITE) {
+            maybeAddMove(board, &move, BLACK, moves, index, size);
+        }
+    }
+    //Add double moves
+    move.to.x=move.from.x;
+    move.to.y=from.y-2;
+    if(move.from.y==6) {
+        if(board[move.to.x][move.to.y+1].pieceType==EMPTY &&
+           board[move.to.x][move.to.y].pieceType==EMPTY) {
+            maybeAddMove(board, &move, BLACK, moves, index, size);
        }
-    }
-    if(isOnBoard(x-1, y-1)) {
-        if(board[x][y].canEnpassante_left) {
-            if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
-                addMoveToList(x, y, x-1, y-1, moves, index, size);
-            }
-            board[x][y].canEnpassante_left=false;
-        } else if(board[x-1][y-1].color==WHITE) {
-            if(checkMove_Pawn(board, BLACK, x, y, x-1, y-1)) {
-                addMoveToList(x, y, x-1, y-1, moves, index, size);
-            }
-        }
-    }
-    if(isOnBoard(x+1, y-1)) {
-        if(board[x][y].canEnpassante_right) {
-            if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
-                addMoveToList(x, y, x+1, y-1, moves, index, size);
-            }
-            board[x][y].canEnpassante_right=false;
-        } else if(board[x+1][y-1].color==WHITE) {
-            if(checkMove_Pawn(board, BLACK, x, y, x+1, y-1)) {
-                addMoveToList(x, y, x+1, y-1, moves, index, size);
-            }
-        }
     }
     return;
 }
 
 void getMoves_Pawn(Piece board[8][8],
                    Color color,
-                   int x, int y,
+                   Square from,
                    Move** moves,
                    int* index,
                    int* size) {
     if(color==WHITE) {
-        getMoves_Pawn_White(board, x, y, moves, index, size);
+        getMoves_Pawn_White(board, from, moves, index, size);
     } else {
-        getMoves_Pawn_Black(board, x, y, moves, index, size);
+        getMoves_Pawn_Black(board, from, moves, index, size);
     }
 }
 
 void getMoves_Knight(Piece board[8][8],
                   Color color,
-                  int x, int y,
+                  Square from,
                   Move** moves,
                   int* index,
                   int* size) {
@@ -722,16 +770,18 @@ void getMoves_Knight(Piece board[8][8],
     int xOffsetList[] = {-1, 1, -2, 2, -2, 2, -1, 1};
     int yOffsetList[] = {2, 2, 1, 1, -1, -1, -2, -2};
     int len = 8;
-    int x2, y2;
+    
+    Move move;
+    move.from = from;
 
     for(int i=0; i<len; i++) {
-        x2 = x+xOffsetList[i];
-        y2 = y+yOffsetList[i];
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].color==EMPTY||board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        printf("i2:%d\n", i);
+        move.to.x = move.from.x+xOffsetList[i];
+        move.to.y = move.from.y+yOffsetList[i];
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].color==EMPTY ||
+               board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
             }
         }
     }
@@ -739,23 +789,22 @@ void getMoves_Knight(Piece board[8][8],
 
 void getMoves_Diagonal(Piece board[8][8],
                        Color color,
-                       int x, int y,
+                       Square from,
                        Move** moves,
                        int* index,
                        int* size) {
-    int x2, y2;
-    
+    Move move;
+    move.from = from;
+
+    //Add moves down left diagonal
     for(int i=1; i<8; i++) {
-        x2=x-i; y2=y-i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x-i;
+        move.to.y=move.from.y-i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -765,17 +814,15 @@ void getMoves_Diagonal(Piece board[8][8],
         }
     }
 
+    //Add moves down right diagonal
     for(int i=1; i<8; i++) {
-        x2=x+i; y2=y-i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x+i;
+        move.to.y=move.from.y-i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -785,17 +832,15 @@ void getMoves_Diagonal(Piece board[8][8],
         }
     }
 
+    //Add moves up left diagonal
     for(int i=1; i<8; i++) {
-        x2=x-i; y2=y+i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x-i;
+        move.to.y=move.from.y+i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -805,17 +850,15 @@ void getMoves_Diagonal(Piece board[8][8],
         }
     }
 
+    //Add moves up right diagonal
     for(int i=1; i<8; i++) {
-        x2=x+i; y2=y+i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x+i;
+        move.to.y=move.from.y+i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -824,29 +867,28 @@ void getMoves_Diagonal(Piece board[8][8],
             break;
         }
     }
+
     return;
 }
 
 void getMoves_Orthogonal(Piece board[8][8],
                          Color color,
-                         int x, int y,
+                         Square from,
                          Move** moves,
                          int* index,
                          int* size) {
-    int x2, y2;
+    Move move;
+    move.from = from;
 
-    y2=y;
+    // Add horizontal moves
+    move.to.y=move.from.y;
     for(int i=1; i<8; i++) {
-        x2=x-i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x-i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -856,16 +898,12 @@ void getMoves_Orthogonal(Piece board[8][8],
         }
     }
     for(int i=1; i<8; i++) {
-        x2=x+i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.x=move.from.x+i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -875,18 +913,15 @@ void getMoves_Orthogonal(Piece board[8][8],
         }
     }
 
-    x2=x;
+    //Add vertical moves
+    move.to.x=move.from.x;
     for(int i=1; i<8; i++) {
-        y2=y-i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.y=move.from.y-i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -896,16 +931,12 @@ void getMoves_Orthogonal(Piece board[8][8],
         }
     }
     for(int i=1; i<8; i++) {
-        y2=y+i;
-        if(isOnBoard(x2, y2)) {
-            if(board[x2][y2].pieceType==EMPTY) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
-            } else if(board[x2][y2].color!=color) {
-                if(checkMove(board, color, x, y, x2, y2)) {
-                    addMoveToList(x, y, x2, y2, moves, index, size);
-                }
+        move.to.y=move.from.y+i;
+        if(isOnBoard(move.to)) {
+            if(board[move.to.x][move.to.y].pieceType==EMPTY) {
+                maybeAddMove(board, &move, color, moves, index, size);
+            } else if(board[move.to.x][move.to.y].color!=color) {
+                maybeAddMove(board, &move, color, moves, index, size);
                 break;
             } else {
                 break;
@@ -920,100 +951,97 @@ void getMoves_Orthogonal(Piece board[8][8],
 
 void getMoves_Bishop(Piece board[8][8],
                      Color color,
-                     int x, int y,
+                     Square from,
                      Move** moves,
                      int* index,
                      int* size) {
-    getMoves_Diagonal(board, color, x, y, moves, index, size);
+    getMoves_Diagonal(board, color, from, moves, index, size);
     return;
 }
 
 void getMoves_Rook(Piece board[8][8],
                    Color color,
-                   int x, int y,
+                   Square from,
                    Move** moves,
                    int* index,
                    int* size) {
-    getMoves_Orthogonal(board, color, x, y, moves, index, size);
+    getMoves_Orthogonal(board, color, from, moves, index, size);
     return;
 }
 
 void getMoves_Queen(Piece board[8][8],
                     Color color,
-                    int x, int y,
+                    Square from,
                     Move** moves,
                     int* index,
                     int* size) {
-    getMoves_Diagonal(board, color, x, y, moves, index, size);
-    getMoves_Orthogonal(board, color, x, y, moves, index, size);
+    getMoves_Diagonal(board, color, from, moves, index, size);
+    getMoves_Orthogonal(board, color, from, moves, index, size);
     return;
 }
 
 void getMoves_King(Piece board[8][8],
                    Color color,
-                   int x, int y,
+                   Square from,
                    Move** moves,
                    int* index,
                    int* size) {
-    int x2, y2;
+    Move move;
+    move.from = from;
+
     for(int i=-1; i<2; i++) {
         for(int j=-1; j<2; j++) {
-            x2=x+i; y2=y+j;
-            if(isOnBoard(x2, y2)) {
-                if(board[x2][y2].color!=color) {
-                    if(checkMove(board, color, x, y, x2, y2)) {
-                        addMoveToList(x, y, x2, y2, moves, index, size);
-                    }
-                }
+            move.to.x=move.from.x+i;
+            move.to.y=move.from.y+j;
+            if(isOnBoard(move.to)) {
+                maybeAddMove(board, &move, color, moves, index, size);
             }
         }
     }
-    if(board[x][y].canSpecialMove) {
-        if(board[0][y].pieceType==ROOK&&board[0][y].canSpecialMove) {
-            if(board[1][y].color==NONE &&
-               board[2][y].color==NONE &&
-               board[3][y].color==NONE) {
-                if(checkMove_Castle(board, color, x, y, 2, y)) {
-                    addMoveToList(x, y, 2, y, moves, index, size);
-                }
+    if(board[move.from.x][move.from.y].canSpecialMove) {
+        if(board[0][move.from.y].pieceType==ROOK&&board[0][move.from.y].canSpecialMove) {
+            if(board[1][move.from.y].color==NONE &&
+               board[2][move.from.y].color==NONE &&
+               board[3][move.from.y].color==NONE) {
+                maybeAddMove(board, &move, color, moves, index, size);
             }
         }
-        if(board[7][y].pieceType==ROOK&&board[7][y].canSpecialMove) {
-            if(board[5][y].color==NONE &&
-               board[6][y].color==NONE) {
-                if(checkMove_Castle(board, color, x, y, 6, y)) {
-                    addMoveToList(x, y, 6, y, moves, index, size);
-                }
+        if(board[7][move.from.y].pieceType==ROOK&&board[7][move.from.y].canSpecialMove) {
+            if(board[5][move.from.y].color==NONE &&
+               board[6][move.from.y].color==NONE) {
+                maybeAddMove(board, &move, color, moves, index, size);
             }
         }
     }
+
+    return;
 }
 
 void getMoves_FromSquare(Piece board[8][8],
                         Color color,
-                        int x, int y,
+                        Square from,
                         Move** moves,
                         int* index,
                         int* size) {
     
-    switch(board[x][y].pieceType) {
+    switch(board[from.x][from.y].pieceType) {
         case PAWN:
-            getMoves_Pawn(board, color, x, y, moves, index, size);
+            getMoves_Pawn(board, color, from, moves, index, size);
             break;
         case KNIGHT:
-            getMoves_Knight(board, color, x, y, moves, index, size);
+            getMoves_Knight(board, color, from, moves, index, size);
             break;
         case BISHOP:
-            getMoves_Bishop(board, color, x, y, moves, index, size);
+            getMoves_Bishop(board, color, from, moves, index, size);
             break;
         case ROOK:
-            getMoves_Rook(board, color, x, y, moves, index, size);
+            getMoves_Rook(board, color, from, moves, index, size);
             break;
         case QUEEN:
-            getMoves_Queen(board, color, x, y, moves, index, size);
+            getMoves_Queen(board, color, from, moves, index, size);
             break;
         case KING:
-            getMoves_King(board, color, x, y, moves, index, size);
+            getMoves_King(board, color, from, moves, index, size);
             break;
     }
     return;
@@ -1022,10 +1050,13 @@ void getMoves_FromSquare(Piece board[8][8],
 
 int getMoves(Piece board[8][8], Color color, Move** moves) {
     int index = 0, size = 10;
+    Square square;
     for(int j=0; j<8; j++) {
         for(int i=0; i<8; i++) {
+            square.x=i; square.y=j;
             if(board[i][j].color==color) {
-                getMoves_FromSquare(board, color, i, j, moves, &index, &size);
+                printf("i:%d, j:%d\n", i, j);
+                getMoves_FromSquare(board, color, square, moves, &index, &size);
             }
         }
     }

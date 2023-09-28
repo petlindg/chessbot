@@ -1,4 +1,4 @@
 #include <stdbool.h>
 
-void randomTestGame();
+void test_randomTestGame();
 bool test_verifyNotCheck();
