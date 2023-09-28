@@ -5,6 +5,7 @@
 #include "chess.h"
 #include "interface.h"
 #include "tests.h"
+#include "move.h"
 
 void test_randomTestGame() {
     int t = time(NULL);
