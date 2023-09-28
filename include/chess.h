@@ -8,4 +8,4 @@ void initBoard(Piece board[8][8]);
 
 bool isOnBoard(Square square);
 
-bool isCheck(Piece board[8][8], Color color);
+void findKing(Piece board[8][8], Color color, Square* kingPos);

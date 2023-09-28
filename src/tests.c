@@ -1,11 +1,13 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "types.h"
 #include "chess.h"
 #include "interface.h"
 #include "tests.h"
 #include "move.h"
+#include "check.h"
 
 void test_randomTestGame() {
     int t = time(NULL);
@@ -18,7 +20,6 @@ void test_randomTestGame() {
     Color color;
 
     initBoard(board);
-    printBoard(board);
 
     while(size) {
         moves = malloc(10*sizeof(Move));
@@ -28,7 +29,7 @@ void test_randomTestGame() {
             color = WHITE;
         }
         size = getMoves(board, color, &moves);
-        if(i>1000||!size) {
+        if(i>=1000||!size) {
             break;
         }
         //printMoves(moves, size);
@@ -41,7 +42,7 @@ void test_randomTestGame() {
     }
     printBoard(board);
     printMove(moves[r]);
-    printf("i:%d\n", i);
+    printf("Amount of moves: %d\n", i);
     free(moves);
     return;
 }

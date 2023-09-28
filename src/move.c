@@ -5,6 +5,7 @@
 #include "types.h"
 #include "chess.h"
 #include "interface.h"
+#include "check.h"
 
 void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
     Color color = board[x1][y1].color;

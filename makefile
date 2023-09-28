@@ -11,7 +11,7 @@ LIBS = -lm
 _DEPS = chess.h interface.h types.h tests.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o chess.o interface.o tests.o move.o
+_OBJ = main.o chess.o interface.o tests.o move.o check.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
