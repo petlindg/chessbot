@@ -8,6 +8,7 @@
 
 void test_randomTestGame() {
     int t = time(NULL);
+    //int t = 0;
     srand(t);
 
     Piece board[8][8];
@@ -25,17 +26,23 @@ void test_randomTestGame() {
         } else {
             color = WHITE;
         }
-        printf("1\n");
         size = getMoves(board, color, &moves);
-        printf("2\n");
-        if(i>1000||!size) break;
+        if(i>1000||!size) {
+            break;
+        }
+        //printMoves(moves, size);
+        //printMove(moves[r]);
         r = rand()%size;
         movePiece(board, moves[r]);
-        printBoard(board);
-        printMove(moves[r]);
+        //printBoard(board);
         free(moves);
         i++;
     }
+    printBoard(board);
+    printMove(moves[r]);
+    printf("i:%d\n", i);
+    free(moves);
+    return;
 }
 
 bool test_verifyNotCheck() {
@@ -49,7 +56,6 @@ bool test_verifyNotCheck() {
     initBoard(board);
 
     for(unsigned int k=0; k<1000; k++) {
-        printBoard(board);
         initBoard(board);
         i=0;
         printf("k:%d\n", k);

@@ -385,7 +385,6 @@ void movePiece_King(Piece board[8][8], unsigned char x1, unsigned char y1, unsig
 }
 
 void movePiece(Piece board[8][8], Move move) {
-    //printf("x:%d, y:%d\n", move.from.x, move.from.y);
     switch(board[move.from.x][move.from.y].pieceType) {
         case PAWN:
             movePiece_Pawn(board, move.from.x, move.from.y, move.to.x ,move.to.y);
@@ -421,26 +420,6 @@ void addMove(Move* move, Move** moves, int *index, int* size) {
     }
 
     (*moves)[*index]=*move;
-
-    (*index)++;
-    return;
-}
-
-void addMove_Promotion(unsigned char x1, unsigned char y1,
-                   unsigned char x2, unsigned char y2,
-                   PieceType pieceType,
-                   Move** moves,
-                   int *index, int* size) {
-    if(*index>=*size) {
-        *size+=10;
-        *moves = (Move*) realloc(*moves, (sizeof(Move)*(*size)));
-        if(!*moves) printf("moves realloc failed");
-    }
-    (*moves)[*index].from.x=x1;
-    (*moves)[*index].from.y=y1;
-    (*moves)[*index].to.x=x2;
-    (*moves)[*index].to.y=y2;
-    (*moves)[*index].promoteTo=pieceType;
 
     (*index)++;
     return;
@@ -612,7 +591,7 @@ bool checkMove(Piece board[8][8],
         return checkMove_Castle(board, color, move);
     }
     else {
-        return checkMove(board, color, move);
+        return checkMove_Default(board, color, move);
     }
 }
 
@@ -635,7 +614,6 @@ void getMoves_Pawn_White(Piece board[8][8],
     //Add default moves and promotion through default moves
     move.to.x=from.x;
     move.to.y=from.y+1;
-    printMove(move);
     if(isOnBoard(move.to)) {
         if(board[move.to.x][move.to.y].pieceType==EMPTY) {
             if(checkMove(board, WHITE, &move)) {
@@ -661,7 +639,20 @@ void getMoves_Pawn_White(Piece board[8][8],
             maybeAddMove(board, &move, WHITE, moves, index, size);
             board[move.from.x][move.from.y].canEnpassante_left=false;
         } else if(board[move.to.x][move.to.y].color==BLACK) {
-            maybeAddMove(board, &move, WHITE, moves, index, size);
+            if(checkMove(board, WHITE, &move)) {
+                if(move.to.y==7) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
+            }
         }
     }
     //Add take moves right
@@ -671,7 +662,20 @@ void getMoves_Pawn_White(Piece board[8][8],
             maybeAddMove(board, &move, WHITE, moves, index, size);
             board[move.from.x][move.from.y].canEnpassante_right=false;
         } else if(board[move.to.x][move.to.y].color==BLACK) {
-            maybeAddMove(board, &move, WHITE, moves, index, size);
+            if(checkMove(board, WHITE, &move)) {
+                if(move.to.y==7) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
+            }
         }
     }
     //Add double moves
@@ -722,7 +726,20 @@ void getMoves_Pawn_Black(Piece board[8][8],
             maybeAddMove(board, &move, BLACK, moves, index, size);
             board[move.from.x][move.from.y].canEnpassante_left=false;
         } else if(board[move.to.x][move.to.y].color==WHITE) {
-            maybeAddMove(board, &move, BLACK, moves, index, size);
+            if(checkMove(board, BLACK, &move)) {
+                if(move.to.y==0) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
+            }
         }
     }
     //Add take moves right
@@ -732,7 +749,20 @@ void getMoves_Pawn_Black(Piece board[8][8],
             maybeAddMove(board, &move, BLACK, moves, index, size);
             board[move.from.x][move.from.y].canEnpassante_right=false;
         } else if(board[move.to.x][move.to.y].color==WHITE) {
-            maybeAddMove(board, &move, BLACK, moves, index, size);
+            if(checkMove(board, BLACK, &move)) {
+                if(move.to.y==0) {
+                    move.promoteTo=KNIGHT;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=BISHOP;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=ROOK;
+                    addMove(&move, moves, index, size);
+                    move.promoteTo=QUEEN;
+                    addMove(&move, moves, index, size);
+                } else {
+                    addMove(&move, moves, index, size);
+                }
+            }
         }
     }
     //Add double moves
@@ -775,7 +805,6 @@ void getMoves_Knight(Piece board[8][8],
     move.from = from;
 
     for(int i=0; i<len; i++) {
-        printf("i2:%d\n", i);
         move.to.x = move.from.x+xOffsetList[i];
         move.to.y = move.from.y+yOffsetList[i];
         if(isOnBoard(move.to)) {
@@ -994,7 +1023,9 @@ void getMoves_King(Piece board[8][8],
             move.to.x=move.from.x+i;
             move.to.y=move.from.y+j;
             if(isOnBoard(move.to)) {
-                maybeAddMove(board, &move, color, moves, index, size);
+                if(board[move.to.x][move.to.y].color!=color) {
+                    maybeAddMove(board, &move, color, moves, index, size);
+                }
             }
         }
     }
@@ -1055,7 +1086,6 @@ int getMoves(Piece board[8][8], Color color, Move** moves) {
         for(int i=0; i<8; i++) {
             square.x=i; square.y=j;
             if(board[i][j].color==color) {
-                printf("i:%d, j:%d\n", i, j);
                 getMoves_FromSquare(board, color, square, moves, &index, &size);
             }
         }

@@ -112,8 +112,8 @@ void printPieceType(PieceType pieceType) {
             printf("KING");
             return;
     }
-    printf("error nonexhaustive pattern in interface > printPieceType\n");
-    exit(0);
+    printf("NaN");
+    return;
 }
 
 void printMove(Move move) {
