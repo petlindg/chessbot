@@ -1,6 +1,6 @@
 #include "types.h"
 #include "interface.h"
-#include "chess.h"
+#include "board.h"
 #include <stdio.h>
 #include <stdbool.h>
 

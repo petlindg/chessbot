@@ -8,10 +8,10 @@ CC = gcc
 CFLAGS = -I $(IDIR)
 LIBS = -lm
 
-_DEPS = chess.h interface.h types.h tests.h
+_DEPS = board.h interface.h types.h tests.h move.h check.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o chess.o interface.o tests.o move.o check.o
+_OBJ = main.o board.o interface.o tests.o move.o check.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)

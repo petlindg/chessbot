@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "types.h"
-#include "chess.h"
+#include "board.h"
 #include "interface.h"
 
 void initPiece_Empty(Piece* piece) {
@@ -59,18 +59,6 @@ void initBoard(Piece board[8][8]) {
     initPiece(&board[6][0], KNIGHT, WHITE);
     initPiece(&board[7][0], ROOK, WHITE);
     return;
-}
-
-void findKing(Piece board[8][8], Color color, Square* kingPos) {
-    for(int i=0; i<8; i++) {
-        for(int j=0; j<8; j++) {
-            if(board[i][j].pieceType==KING && board[i][j].color == color) {
-                kingPos->x=i;
-                kingPos->y=j;
-                return;
-            }
-        }
-    }
 }
 
 bool isOnBoard(Square square) {
