@@ -1,10 +1,7 @@
+#include <stdio.h>
+
 #include "types.h"
 #include "interface.h"
-#include "board.h"
-#include <stdio.h>
-#include <stdbool.h>
-
-#include <unistd.h>
 
 void printPiece(Piece* piece) {
     switch(piece->pieceType) {

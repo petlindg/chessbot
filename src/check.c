@@ -1,10 +1,7 @@
-#include <stdio.h>
-
-#include <stdlib.h>
 #include <stdbool.h>
+
 #include "types.h"
 #include "board.h"
-#include "interface.h"
 
 void findKing(Piece board[8][8], Color color, Square* kingPos) {
     for(int i=0; i<8; i++) {
