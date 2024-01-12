@@ -8,6 +8,43 @@
 #include "tests.h"
 #include "move.h"
 #include "check.h"
+#include "bot.h"
+
+void test_checkGame(int seed) {
+    srand(seed);
+    int input = 0;
+
+    Piece board[8][8];
+    Move* moves = malloc(10*sizeof(Move));
+    unsigned int size=1, i=0, r;
+    Color color;
+
+    initBoard(board);
+
+    while(size) {
+        moves = malloc(10*sizeof(Move));
+        if(i%2) {
+            color = BLACK;
+        } else {
+            color = WHITE;
+        }
+        size = getMoves(board, color, &moves);
+        if(i>=1000||!size) {
+            break;
+        }
+        r = rand()%size;
+        movePiece(board, moves[r]);
+        printMove(moves[r]);
+        free(moves);
+        i++;
+        printBoard(board);
+        
+        input = 0;
+    }
+    printf("Amount of moves: %d\n", i);
+    free(moves);
+    return;
+}
 
 void test_randomTestGame() {
     int t = time(NULL);
@@ -43,6 +80,7 @@ void test_randomTestGame() {
     printBoard(board);
     printMove(moves[r]);
     printf("Amount of moves: %d\n", i);
+    printf("Seed: %d\n", t);
     free(moves);
     return;
 }
@@ -101,4 +139,50 @@ bool test_verifyNotCheck() {
     }
     printf("Test succeeded.\n");
     return true;
+}
+
+void test_memory() {
+
+}
+
+void test_tmp(int seed) {
+
+    srand(seed);
+    int input = 0;
+    int eval = 0;
+
+    Piece board[8][8];
+    Move* moves = malloc(10*sizeof(Move));
+    unsigned int size=1, i=0, r;
+    Color color;
+
+    initBoard(board);
+
+    while(size) {
+        moves = malloc(10*sizeof(Move));
+        if(i%2) {
+            color = BLACK;
+        } else {
+            color = WHITE;
+        }
+        size = getMoves(board, color, &moves);
+        if(i>=250||!size) {
+            break;
+        }
+        r = rand()%size;
+        movePiece(board, moves[r]);
+        printMove(moves[r]);
+        free(moves);
+        i++;
+        printBoard(board);
+        eval = evalBoard(board, color);
+        printf("eval: %d\n", eval);
+        
+        
+        input = 0;
+    }
+
+    printf("Amount of moves: %d\n", i);
+    free(moves);
+    return;
 }
