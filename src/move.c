@@ -1,10 +1,9 @@
-#include <stdio.h>
+#include <stdio.h> //used for error messages
 
 #include <stdlib.h>
 #include <stdbool.h>
 #include "types.h"
-#include "chess.h"
-#include "interface.h"
+#include "board.h"
 #include "check.h"
 
 void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {

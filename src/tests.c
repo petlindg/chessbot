@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #include "types.h"
-#include "chess.h"
+#include "board.h"
 #include "interface.h"
 #include "tests.h"
 #include "move.h"
