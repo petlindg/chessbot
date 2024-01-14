@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "types.h"
-#include "chess.h"
+#include "check.h"
 #include "interface.h"
 #include "move.h"
 

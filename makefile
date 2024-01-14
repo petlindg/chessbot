@@ -8,7 +8,7 @@ CC = gcc
 CFLAGS = -I $(IDIR)
 LIBS = -lm
 
-_DEPS = check.h chess.h interface.h move.h tests.h types.h
+_DEPS = board.h bot.h check.h interface.h move.h tests.h types.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = main.o bot.o check.o chess.o interface.o move.o tests.o
@@ -20,11 +20,10 @@ $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 chess: $(OBJ)
 	$(CC) -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
-
 .PHONY: clean
 
 clean:
-	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~
 
 debug: $(OBJ)
 	$(CC) -g -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
