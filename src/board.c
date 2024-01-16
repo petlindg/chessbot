@@ -64,3 +64,11 @@ void initBoard(Piece board[8][8]) {
 bool isOnBoard(Square square) {
     return (square.x>=0&&square.x<8)&&(square.y>=0&&square.y<8);
 }
+
+void copyBoard(Piece boardSrc[8][8], Piece boardDst[8][8]) {
+    for(int i=0; i<8; i++) {
+        for(int j=0; j<8; j++) {
+            boardDst[i][j] = boardSrc[i][j];
+        }
+    }
+}

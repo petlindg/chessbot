@@ -145,16 +145,13 @@ void test_memory() {
 
 }
 
-void test_tmp(int seed) {
-
-    srand(seed);
-    int input = 0;
-    int eval = 0;
-
+void test_tmp() {
     Piece board[8][8];
-    Move* moves = malloc(10*sizeof(Move));
-    unsigned int size=1, i=0, r;
-    Color color;
+    Move* moves;
+    unsigned int size=1, i=0;
+    Color color, notColor;
+    Move moveBest, moveCurrent;
+    int evalBest, evalCurrent;
 
     initBoard(board);
 
@@ -162,27 +159,27 @@ void test_tmp(int seed) {
         moves = malloc(10*sizeof(Move));
         if(i%2) {
             color = BLACK;
+            notColor = WHITE;
         } else {
             color = WHITE;
+            notColor = BLACK;
         }
         size = getMoves(board, color, &moves);
         if(i>=250||!size) {
+            free(moves);
             break;
         }
-        r = rand()%size;
-        movePiece(board, moves[r]);
-        printMove(moves[r]);
+        evalBest=-2000;
+        getBestMove(board, color, notColor, 3, &evalBest, &evalCurrent,
+                    &moveBest, &moveCurrent);
+        movePiece(board, moveBest);
+        printMoves(moves, size);
+        printMove(moveBest);
         free(moves);
         i++;
         printBoard(board);
-        eval = evalBoard(board, color);
-        printf("eval: %d\n", eval);
-        
-        
-        input = 0;
     }
 
     printf("Amount of moves: %d\n", i);
-    free(moves);
     return;
 }

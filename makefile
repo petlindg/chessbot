@@ -11,13 +11,14 @@ LIBS = -lm
 _DEPS = board.h bot.h check.h interface.h move.h tests.h types.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o bot.o check.o chess.o interface.o move.o tests.o
+_OBJ = board.o interface.o move.o check.o bot.o tests.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 chess: $(OBJ)
+	echo $(CC) -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 	$(CC) -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

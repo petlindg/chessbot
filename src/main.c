@@ -1,5 +1,5 @@
 #include "tests.h"
 
 int main(){
-    test_tmp(0);
+    test_tmp();
 }
