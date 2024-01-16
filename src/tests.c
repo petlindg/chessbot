@@ -4,8 +4,8 @@
 
 #include "types.h"
 #include "board.h"
-#include "interface.h"
 #include "tests.h"
+#include "interface.h"
 #include "move.h"
 #include "check.h"
 #include "bot.h"
@@ -145,12 +145,12 @@ void test_memory() {
 
 }
 
-void test_tmp() {
+void test_findBestMove() {
     Piece board[8][8];
     Move* moves;
     unsigned int size=1, i=0;
-    Color color, notColor;
-    Move moveBest, moveCurrent;
+    Color color;
+    Move move;
     int evalBest, evalCurrent;
 
     initBoard(board);
@@ -159,27 +159,78 @@ void test_tmp() {
         moves = malloc(10*sizeof(Move));
         if(i%2) {
             color = BLACK;
-            notColor = WHITE;
         } else {
             color = WHITE;
-            notColor = BLACK;
         }
         size = getMoves(board, color, &moves);
-        if(i>=250||!size) {
+        if(i>=25||!size) {
             free(moves);
             break;
         }
-        evalBest=-2000;
-        getBestMove(board, color, notColor, 3, &evalBest, &evalCurrent,
-                    &moveBest, &moveCurrent);
-        movePiece(board, moveBest);
-        printMoves(moves, size);
-        printMove(moveBest);
+        move = getBestMove(board, color, 5);
+        movePiece(board, move);
+        //printMoves(moves, size);
         free(moves);
         i++;
         printBoard(board);
+        printMove(move);
     }
 
     printf("Amount of moves: %d\n", i);
+    return;
+}
+
+void test_playFindBestMove() {
+    Piece board[8][8];
+    Move* moves;
+    unsigned int size=1, i=0;
+    Color color;
+    Move move;
+    int evalBest, evalCurrent;
+
+    initBoard(board);
+
+    while(size) {
+        moves = malloc(10*sizeof(Move));
+        if(i%2) {
+            color = BLACK;
+            size = getMoves(board, color, &moves);
+            move = getBestMove(board, color, 3);
+        } else {
+            color = WHITE;
+            size = getMoves(board, color, &moves);
+            move = promptMove(moves, size);
+        }
+
+        movePiece(board, move);
+
+        if(i>=200||!size) {
+            free(moves);
+            break;
+        }
+        
+        free(moves);
+        i++;
+        printBoard(board);
+        printMove(move);
+    }
+
+    printf("Amount of moves: %d\n", i);
+    return;
+}
+
+void test_copyBoard() {
+    Piece board[8][8];
+    initBoard(board);
+    printf("board before copy:\n");
+    printBoard(board);
+
+    Piece copiedBoard[8][8];
+    copyBoard(board, copiedBoard);
+    printf("board after copy:\n");
+    printBoard(board);
+    printf("copied board:\n");
+    printBoard(copiedBoard);
+    
     return;
 }

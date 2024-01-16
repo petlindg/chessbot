@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#define DEPTH 3
 
 typedef enum PieceTypes {
     EMPTY, PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING

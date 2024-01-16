@@ -8,17 +8,16 @@ CC = gcc
 CFLAGS = -I $(IDIR)
 LIBS = -lm
 
-_DEPS = board.h bot.h check.h interface.h move.h tests.h types.h
+_DEPS = board.h bot.h check.h move.h tests.h interface.h types.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = board.o interface.o move.o check.o bot.o tests.o main.o
+_OBJ = board.o move.o check.o bot.o tests.o interface.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(SDIR)/%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 chess: $(OBJ)
-	echo $(CC) -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 	$(CC) -o $(BDIR)/$@ $^ $(CFLAGS) $(LIBS)
 
 .PHONY: clean

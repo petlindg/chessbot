@@ -47,43 +47,101 @@ int evalBoard(Piece board[8][8], Color color) {
     return val;
 }
 
+//returns true if it finds a path with higher evaluation
+bool getBestMove_r(Piece board[8][8],
+                   Color playColor,
+                   Color otherColor,
+                   int depth,
+                   int* eval) {
+
+    if(depth<=0) {
+        int newEval = evalBoard(board, playColor);
+        if(newEval>=*eval) {
+            *eval=newEval;
+            return true;
+        }
+        return false;
+    }
+
+    Piece copiedBoard[8][8];
+    Move* moves = malloc(10*sizeof(Move));
+    int size = getMoves(board, playColor, &moves);
+
+    if(!size) {
+        free(moves);
+        return false;
+    }
+
+    for(int i=0; i<size; i++) {
+        copyBoard(board, copiedBoard);
+        movePiece(copiedBoard, moves[i]);
+        if(getBestMove_r(copiedBoard, otherColor, playColor, depth-1, eval)) {
+            free(moves);
+            return true;
+        }
+    }
+    free(moves);
+    return false;
+}
 
 // find best move brute force depth first
 // bool color 0 white 1 black
-void getBestMove(Piece board[8][8],
+Move getBestMove(Piece board[8][8],
                   Color playColor,
-                  Color otherColor,
-                  int depth,
-                  int* evalBest,
-                  int* evalCurrent,
-                  Move* moveBest,
-                  Move* moveCurrent) {
+                  int depth) {
 
+    Piece copiedBoard[8][8];
+    Move move;
+    int eval = -2000;
     Move* moves = malloc(10*sizeof(Move));
-    int movesSize = getMoves(board, playColor, &moves);
+    int size = getMoves(board, playColor, &moves);
 
-    if(depth<=0) {
-        return;
+    Color otherColor;
+    if(playColor==WHITE) {
+        otherColor=BLACK;
+    } else {
+        otherColor=WHITE;
     }
 
-    if(!movesSize) {
-        *evalCurrent = -1000;
+    if(!size) {
         free(moves);
-        return;
+        printf("checkmate\n");
+        //freeze, not solved
+        char c = getchar();
     }
 
-    Piece boardClone[8][8];
-    for(int i=0; i<movesSize; i++) {
-        copyBoard(board, boardClone);
-        movePiece(boardClone, moves[i]);
-        getBestMove(boardClone, otherColor, playColor,
-                     depth-1, evalBest, evalCurrent,
-                     moveBest, moveCurrent);
-        *evalCurrent=evalBoard(boardClone, playColor);
-        if(*evalCurrent>*evalBest) {
-            *evalBest=*evalCurrent;
-            *moveBest=moves[i];
 
+    for(int i=0; i<size; i++) {
+        copyBoard(board, copiedBoard);
+        movePiece(copiedBoard, moves[i]);
+        if(getBestMove_r(copiedBoard, playColor, otherColor, depth-1, &eval)) {
+            move=moves[i];
+
+            /*
+            printf("i:%d\n", i);
+            printf("playcolor:");
+            if(playColor=WHITE){
+                printf("WHITE\n");
+            }
+            else {
+                printf("BLACK\n");
+            }
+            printf("eval:%d\n", eval);
+
+            printf("size:%d\n", size);
+            printf("move:");
+            printMove(move);
+
+            int c = getchar();
+            */
+        }
+    }
+    free(moves);
+    return move;
+}
+
+
+/*
             printf("playcolor:");
             if(playColor=WHITE){
                 printf("WHITE\n");
@@ -99,10 +157,6 @@ void getBestMove(Piece board[8][8],
             printMove(*moveCurrent);
             printf("moveBest:");
             printMove(*moveBest);
+            */
 
-            int c = getchar();
-        }
-    }
-    free(moves);
-    return;
-}
+            //int c = getchar();
