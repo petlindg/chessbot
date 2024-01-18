@@ -75,10 +75,13 @@ bool getBestMove_r(Piece board[8][8],
     for(int i=0; i<size; i++) {
         copyBoard(board, copiedBoard);
         movePiece(copiedBoard, moves[i]);
+        *eval*=-1;
         if(getBestMove_r(copiedBoard, otherColor, playColor, depth-1, eval)) {
             free(moves);
+            *eval*=-1;
             return true;
         }
+        *eval*=-1;
     }
     free(moves);
     return false;
@@ -114,6 +117,7 @@ Move getBestMove(Piece board[8][8],
     for(int i=0; i<size; i++) {
         copyBoard(board, copiedBoard);
         movePiece(copiedBoard, moves[i]);
+        eval*=-1;
         if(getBestMove_r(copiedBoard, playColor, otherColor, depth-1, &eval)) {
             move=moves[i];
 
@@ -135,6 +139,7 @@ Move getBestMove(Piece board[8][8],
             int c = getchar();
             */
         }
+        eval*=-1;
     }
     free(moves);
     return move;
