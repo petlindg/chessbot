@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "types.h"
 #include "board.h"
@@ -171,6 +172,7 @@ bool isCheck_King(Piece board[8][8], Color color, Square kingPos) {
 
 bool isCheck(Piece board[8][8], Color color) {
     Square kingPos;
+    kingPos.x=9; kingPos.y=9;
     findKing(board, color, &kingPos);
     if(isCheck_Horizontal(board, color, kingPos)) return true;
     if(isCheck_Vertical(board, color, kingPos)) return true;

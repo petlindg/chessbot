@@ -145,6 +145,19 @@ void test_memory() {
 
 }
 
+void test_initTestBoard(Piece board[8][8]) {
+
+    for(int i=0; i<8; i++) {
+        for(int j=0; j<8; j++) {
+            initPiece_Empty(&board[i][j]);
+        }
+    }
+
+    initPiece(&board[0][4], PAWN, WHITE);
+    initPiece(&board[7][7], ROOK, BLACK);
+    return;
+}
+
 void test_findBestMove() {
     Piece board[8][8];
     Move* moves;
@@ -188,14 +201,17 @@ void test_playFindBestMove() {
     Move move;
     int evalBest, evalCurrent;
 
-    initBoard(board);
+    //initBoard(board);
+    test_initTestBoard(board);
+
+    printBoard(board);
 
     while(size) {
         moves = malloc(10*sizeof(Move));
         if(i%2) {
             color = BLACK;
             size = getMoves(board, color, &moves);
-            move = getBestMove(board, color, 3);
+            move = getBestMove(board, color, 2);
         } else {
             color = WHITE;
             size = getMoves(board, color, &moves);
