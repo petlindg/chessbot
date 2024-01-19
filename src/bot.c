@@ -99,13 +99,13 @@ bool getBestMove_r(Piece board[8][8],
 // bool color 0 white 1 black
 Move getBestMove(Piece board[8][8],
                   Color playColor,
-                  int depth) {
+                  int depth,
+                  Move* moves,
+                  int size) {
 
     Piece copiedBoard[8][8];
     Move move;
-    int eval = 0;
-    Move* moves = malloc(10*sizeof(Move));
-    int size = getMoves(board, playColor, &moves);
+    int eval = 2000;
 
     Color otherColor;
     if(playColor==WHITE) {
@@ -114,19 +114,9 @@ Move getBestMove(Piece board[8][8],
         otherColor=WHITE;
     }
 
-    if(!size) {
-        free(moves);
-        printf("checkmate\n");
-        //freeze, not solved
-        char c = getchar();
-    }
-
-
     for(int i=0; i<size; i++) {
         copyBoard(board, copiedBoard);
         movePiece(copiedBoard, moves[i]);
-        //printBoard(copiedBoard);
-        //printf("i:%d\n", i);
 
         eval = -eval;
         bool newBestMove = getBestMove_r(copiedBoard, otherColor, playColor, depth-1, &eval);

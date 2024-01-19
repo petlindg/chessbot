@@ -69,11 +69,8 @@ void test_randomTestGame() {
         if(i>=1000||!size) {
             break;
         }
-        //printMoves(moves, size);
-        //printMove(moves[r]);
         r = rand()%size;
         movePiece(board, moves[r]);
-        //printBoard(board);
         free(moves);
         i++;
     }
@@ -180,7 +177,7 @@ void test_findBestMove() {
             free(moves);
             break;
         }
-        move = getBestMove(board, color, 5);
+        move = getBestMove(board, color, 5, moves, size);
         movePiece(board, move);
         //printMoves(moves, size);
         free(moves);
@@ -211,20 +208,20 @@ void test_playFindBestMove() {
         if(i%2) {
             color = BLACK;
             size = getMoves(board, color, &moves);
-            move = getBestMove(board, color, 2);
+            move = getBestMove(board, color, 1, moves, size);
         } else {
             color = WHITE;
             size = getMoves(board, color, &moves);
             move = promptMove(moves, size);
         }
 
-        movePiece(board, move);
-
         if(i>=200||!size) {
             free(moves);
             break;
         }
-        
+
+        movePiece(board, move);
+
         free(moves);
         i++;
         printBoard(board);
