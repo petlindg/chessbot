@@ -47,6 +47,135 @@ int evalBoard(Piece board[8][8], Color color) {
     return val;
 }
 
+void initNode(Piece board[8][8],
+                   Color playColor,
+                   Node* node) {
+
+    Move* moves = malloc(10*sizeof(Move));
+    int size;
+    if(node->children==0) {
+        size = getMoves(board, playColor, &moves);
+        node->children = malloc(size*sizeof(Node*));
+        node->numberOfChildren = size;
+        for(int i=0; i<size; i++) {
+            node->children[i] = malloc(sizeof(Node));
+            node->children[i]->move = moves[i];
+            node->children[i]->children = NULL;    //ensure children pointer is null until initialized
+            node->children[i]->plays = 0;
+            node->children[i]->wins = 0;
+        }
+    } else {
+        printf("ERROR: node double initialization\n");
+        char c = getchar();
+    }
+    free(moves);
+    return;
+}
+
+void freeTree(Node* node) {
+    if(!node->children) {
+        free(node);
+        return;
+    }
+    for(int i=0; i<node->numberOfChildren; i++) {
+        freeTree(node->children[i]);
+    }
+    free(node);
+    return;
+}
+
+//returns 0 if tie, 1 if white win and 2 if black wins
+int MCTS_r(Piece board[8][8],
+            Color playColor,
+            Color otherColor,
+            Node* node, 
+            int ttl) {
+
+    node->plays+=2;
+
+    if(!node->children) {
+        initNode(board, playColor, node);
+    }
+    if(node->numberOfChildren==0) {
+        if(playColor == WHITE) {
+            node->wins+=2;
+            return 1;
+        } else if(playColor == BLACK) {
+            return 2;
+        }
+    } else if(ttl<=0) {
+        node->wins++;
+        return 0;
+    } else {
+        Piece copiedBoard[8][8];
+        copyBoard(board, copiedBoard);
+        int r = rand()%node->numberOfChildren;
+        movePiece(copiedBoard, node->children[r]->move);
+        int a = MCTS_r(copiedBoard, otherColor, playColor, node->children[r], ttl-1);
+        if(a==1) {
+            node->wins+=2;
+        } else if(a==0) {
+            node->wins++;
+        }
+        return a;
+    }
+}
+
+Move MCTS(Piece board[8][8],
+          Color playColor,
+          int iterations,
+          Node** node) {
+    
+    int r;
+    Color otherColor;
+    if(playColor==WHITE) {
+        otherColor = BLACK;
+        printf("WHITE\n");
+    } else {
+        otherColor = WHITE;
+        printf("BLACK\n");
+    }
+    
+    for(int i=0; i<iterations; i++) {
+        MCTS_r(board, playColor, otherColor, *node, 250);
+    }
+
+    int playIndex;
+    float playValue, curr;
+    Move move;
+    if(playColor==WHITE) {
+        playValue = 0;
+        for(int i=0; i<(*node)->numberOfChildren; i++) {
+            if((*node)->children[i]->plays) {
+                curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
+                if(curr>playValue) {
+                    playValue=curr;
+                    playIndex = i;
+                }
+            }
+        }
+    } else {
+        playValue = 1;
+        //printf("children:%d\n", (*node)->numberOfChildren);
+        for(int i=0; i<(*node)->numberOfChildren; i++) {
+            if((*node)->children[i]->plays) {
+                //printMove((*node)->children[i]->move);
+                curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
+                //printf("curr:%f, playValue:%f, playIndex:%d\n", curr, playValue, playIndex);
+                if(curr<playValue) {
+                    playValue=curr;
+                    playIndex = i;
+                    //printf("curr:%f, playValue:%f, playIndex:%d\n", curr, playValue, playIndex);
+                }
+            }
+        }
+    }
+    *node = (*node)->children[playIndex];
+    //printf("numChild:%d\n", (*node)->numberOfChildren);
+    move = (*node)->move;
+    return move;
+}
+
 //returns true if it finds a path with higher evaluation
 bool getBestMove_r(Piece board[8][8],
                    Color playColor,

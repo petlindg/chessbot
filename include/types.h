@@ -27,3 +27,11 @@ typedef struct Pieces {
     bool canEnpassante_right;
     bool canSpecialMove;
 } Piece;
+
+typedef struct MCTSNode {
+    int wins;       // for white
+    int plays;
+    Move move;
+    struct MCTSNode** children;
+    int numberOfChildren;
+} Node;

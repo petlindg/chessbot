@@ -250,3 +250,50 @@ void test_copyBoard() {
     
     return;
 }
+
+void test_MCTS() {
+
+    //int t = time(NULL);
+    int t = 0;
+    srand(t);
+
+    Piece board[8][8];
+    int i=0;
+    Color color;
+    Move move;
+
+    //test_initTestBoard(board);
+    initBoard(board);
+
+    Node* root = malloc(sizeof(Node));
+    Node* node = root;
+    initNode(board, WHITE, node);
+
+    printBoard(board);
+
+    while(node->numberOfChildren) {
+        if(i%2) {
+            color = BLACK;
+            printf("Color: BLACK\n");
+        } else {
+            color = WHITE;
+            printf("Color: WHITE\n");
+        }
+
+        move = MCTS(board, color, 100, &node);
+        movePiece(board, move);
+        if(i>=250) {
+            break;
+        }
+        
+        i++;
+        printf("i:%d\n", i);
+        printMove(move);
+        printBoard(board);
+    }
+
+    freeTree(root);
+    
+    printf("Amount of moves: %d\n", i);
+    return;
+}

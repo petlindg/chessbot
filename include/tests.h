@@ -7,3 +7,4 @@ void test_memory();
 void test_findBestMove();
 void test_playFindBestMove();
 void test_copyBoard();
+void test_MCTS();
