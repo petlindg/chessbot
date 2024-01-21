@@ -275,9 +275,9 @@ void test_MCTS() {
             color = WHITE;
         }
 
-        move = MCTS(board, color, 1000, &node);
+        move = MCTS(board, color, 100, &node);
         movePiece(board, move);
-        if(i>=400) {
+        if(i>=500) {
             break;
         }
         
@@ -286,8 +286,9 @@ void test_MCTS() {
         printBoard(board);
     }
 
+    printf("Amount of moves: %d\n", i);
+
     freeTree(root);
     
-    printf("Amount of moves: %d\n", i);
     return;
 }
