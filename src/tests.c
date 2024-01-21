@@ -271,20 +271,17 @@ void test_MCTS() {
     while(node->numberOfChildren) {
         if(i%2) {
             color = BLACK;
-            printf("Color: BLACK\n");
         } else {
             color = WHITE;
-            printf("Color: WHITE\n");
         }
 
-        move = MCTS(board, color, 100, &node);
+        move = MCTS(board, color, 1000, &node);
         movePiece(board, move);
-        if(i>=250) {
+        if(i>=400) {
             break;
         }
         
         i++;
-        printf("i:%d\n", i);
         printMove(move);
         printBoard(board);
     }

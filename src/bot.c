@@ -130,14 +130,12 @@ Move MCTS(Piece board[8][8],
     Color otherColor;
     if(playColor==WHITE) {
         otherColor = BLACK;
-        printf("WHITE\n");
     } else {
         otherColor = WHITE;
-        printf("BLACK\n");
     }
     
     for(int i=0; i<iterations; i++) {
-        MCTS_r(board, playColor, otherColor, *node, 250);
+        MCTS_r(board, playColor, otherColor, *node, 400);
     }
 
     int playIndex;
@@ -148,6 +146,8 @@ Move MCTS(Piece board[8][8],
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
+                printMove((*node)->children[i]->move);
+                printf("val:%f\n", curr);
                 if(curr>playValue) {
                     playValue=curr;
                     playIndex = i;
@@ -156,22 +156,19 @@ Move MCTS(Piece board[8][8],
         }
     } else {
         playValue = 1;
-        //printf("children:%d\n", (*node)->numberOfChildren);
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
-                //printMove((*node)->children[i]->move);
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
-                //printf("curr:%f, playValue:%f, playIndex:%d\n", curr, playValue, playIndex);
+                printMove((*node)->children[i]->move);
+                printf("val:%f\n", curr);
                 if(curr<playValue) {
                     playValue=curr;
                     playIndex = i;
-                    //printf("curr:%f, playValue:%f, playIndex:%d\n", curr, playValue, playIndex);
                 }
             }
         }
     }
     *node = (*node)->children[playIndex];
-    //printf("numChild:%d\n", (*node)->numberOfChildren);
     move = (*node)->move;
     return move;
 }
