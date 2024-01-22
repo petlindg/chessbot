@@ -146,8 +146,6 @@ Move MCTS(Piece board[8][8],
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
-                //printMove((*node)->children[i]->move);
-                //printf("val:%f\n", curr);
                 if(curr>playValue) {
                     playValue=curr;
                     playIndex = i;
@@ -159,8 +157,6 @@ Move MCTS(Piece board[8][8],
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
-                //printMove((*node)->children[i]->move);
-                //printf("val:%f\n", curr);
                 if(curr<playValue) {
                     playValue=curr;
                     playIndex = i;
@@ -168,6 +164,13 @@ Move MCTS(Piece board[8][8],
             }
         }
     }
+
+    for(int i=0; i<(*node)->numberOfChildren; i++) {
+        if(i!=playIndex) {
+            freeTree((*node)->children[i]);
+        }
+    }
+
     *node = (*node)->children[playIndex];
     move = (*node)->move;
     return move;
