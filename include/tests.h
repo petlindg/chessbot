@@ -8,3 +8,4 @@ void test_findBestMove();
 void test_playFindBestMove();
 void test_copyBoard();
 void test_MCTS();
+void test_playMCTS();

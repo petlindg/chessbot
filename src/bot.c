@@ -8,7 +8,6 @@
 #include "move.h"
 #include "board.h"
 
-
 int evalPiece(Piece piece, Color color) {
     int val;
     switch(piece.pieceType) {
@@ -53,7 +52,7 @@ void initNode(Piece board[8][8],
 
     Move* moves = malloc(10*sizeof(Move));
     int size;
-    if(node->children==0) {
+    if(node->children==NULL) {
         size = getMoves(board, playColor, &moves);
         node->children = malloc(size*sizeof(Node*));
         node->numberOfChildren = size;
@@ -141,13 +140,14 @@ Move MCTS(Piece board[8][8],
     int playIndex;
     float playValue, curr;
     Move move;
+
     if(playColor==WHITE) {
         playValue = 0;
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
-                printMove((*node)->children[i]->move);
-                printf("val:%f\n", curr);
+                //printMove((*node)->children[i]->move);
+                //printf("val:%f\n", curr);
                 if(curr>playValue) {
                     playValue=curr;
                     playIndex = i;
@@ -159,8 +159,8 @@ Move MCTS(Piece board[8][8],
         for(int i=0; i<(*node)->numberOfChildren; i++) {
             if((*node)->children[i]->plays) {
                 curr = (float)(*node)->children[i]->wins/(float)(*node)->children[i]->plays;
-                printMove((*node)->children[i]->move);
-                printf("val:%f\n", curr);
+                //printMove((*node)->children[i]->move);
+                //printf("val:%f\n", curr);
                 if(curr<playValue) {
                     playValue=curr;
                     playIndex = i;

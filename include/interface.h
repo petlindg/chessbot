@@ -4,3 +4,4 @@ void printMoves(Move* moves, int size);
 void printMoveCoords(Move move);
 void printMove(Move move);
 Move promptMove(Move* moves, int size);
+Move promptMoveNode(Node** node);

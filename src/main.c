@@ -1,5 +1,8 @@
 #include "tests.h"
+#include <stdio.h>
+
 
 int main(){
-    test_MCTS();
+    test_playMCTS();
+    
 }
