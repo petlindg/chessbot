@@ -3,6 +3,5 @@
 
 
 int main(){
-    test_playMCTS();
-    
+    test_play_negaMax();
 }

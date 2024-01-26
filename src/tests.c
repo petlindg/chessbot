@@ -155,7 +155,7 @@ void test_initTestBoard(Piece board[8][8]) {
     return;
 }
 
-void test_findBestMove() {
+void test_play_negaMax() {
     Piece board[8][8];
     Move* moves;
     unsigned int size=1, i=0;
@@ -164,42 +164,7 @@ void test_findBestMove() {
     int evalBest, evalCurrent;
 
     initBoard(board);
-
-    while(size) {
-        moves = malloc(10*sizeof(Move));
-        if(i%2) {
-            color = BLACK;
-        } else {
-            color = WHITE;
-        }
-        size = getMoves(board, color, &moves);
-        if(i>=25||!size) {
-            free(moves);
-            break;
-        }
-        move = getBestMove(board, color, 5, moves, size);
-        movePiece(board, move);
-        //printMoves(moves, size);
-        free(moves);
-        i++;
-        printBoard(board);
-        printMove(move);
-    }
-
-    printf("Amount of moves: %d\n", i);
-    return;
-}
-
-void test_playFindBestMove() {
-    Piece board[8][8];
-    Move* moves;
-    unsigned int size=1, i=0;
-    Color color;
-    Move move;
-    int evalBest, evalCurrent;
-
-    //initBoard(board);
-    test_initTestBoard(board);
+    //test_initTestBoard(board);
 
     printBoard(board);
 
@@ -208,7 +173,7 @@ void test_playFindBestMove() {
         if(i%2) {
             color = BLACK;
             size = getMoves(board, color, &moves);
-            move = getBestMove(board, color, 1, moves, size);
+            move = negaMax(board, color, WHITE, 5);
         } else {
             color = WHITE;
             size = getMoves(board, color, &moves);
@@ -245,102 +210,5 @@ void test_copyBoard() {
     printf("copied board:\n");
     printBoard(copiedBoard);
     
-    return;
-}
-
-void test_MCTS() {
-
-    //int t = time(NULL);
-    int t = 0;
-    srand(t);
-
-    Piece board[8][8];
-    int i=0;
-    Color color;
-    Move move;
-
-    //test_initTestBoard(board);
-    initBoard(board);
-
-    Node* root = malloc(sizeof(Node));
-    Node* node = root;
-    node->children=NULL;
-    initNode(board, WHITE, node);
-
-    printBoard(board);
-
-    while(node->numberOfChildren) {
-        if(i%2) {
-            color = BLACK;
-        } else {
-            color = WHITE;
-        }
-
-        move = MCTS(board, color, 100, &node);
-        movePiece(board, move);
-        if(i>=500) {
-            break;
-        }
-        
-        i++;
-        printMove(move);
-        printBoard(board);
-    }
-
-    printf("Amount of moves: %d\n", i);
-
-    freeTree(root);
-    
-    return;
-}
-
-void test_playMCTS() {
-
-    //int t = time(NULL);
-    int t = 0;
-    srand(t);
-
-    Piece board[8][8];
-    int i=0, size;
-    Color color, notColor;
-    Move move;
-
-    //test_initTestBoard(board);
-    initBoard(board);
-
-    Node* root = malloc(sizeof(Node));
-    Node* node = root;
-    node->children = NULL;
-    initNode(board, WHITE, node);
-
-    printBoard(board);
-
-    while(node->numberOfChildren) {
-        if(i%2) {
-            color = BLACK;
-            move = MCTS(board, color, 100, &node);
-            movePiece(board, move);
-        } else {
-            color = WHITE;
-            notColor = BLACK;
-            move = promptMoveNode(&node);
-            movePiece(board, move);
-            if(!node->children) {
-                initNode(board, notColor, node);
-            }
-        }
-
-        if(i>=400) {
-            break;
-        }
-        
-        i++;
-        printMove(move);
-        printBoard(board);
-    }
-
-    freeTree(root);
-    
-    printf("Amount of moves: %d\n", i);
     return;
 }

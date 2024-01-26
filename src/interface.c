@@ -219,28 +219,3 @@ Move promptMove(Move* moves, int size) {
         printMove(move);
     }
 }
-
-Move promptMoveNode(Node** node) {
-    printf("Make your move.\n");
-
-    int x1, y1, x2, y2;
-    scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
-    
-    Move move1, move2;
-    move1.from.x=x1; move1.from.y=y1; move1.to.x=x2; move1.to.y=y2;
-    int index = 0;
-    for(int i=0; i<(*node)->numberOfChildren; i++) {
-        move2 = (*node)->children[i]->move;
-        if(move1.from.x == move2.from.x &&
-        move1.from.y == move2.from.y &&
-        move1.to.x   == move2.to.x   &&
-        move1.to.y   == move2.to.y) {
-            index=i;
-        } else {
-            freeTree((*node)->children[i]);
-        }
-    }
-    *node = (*node)->children[index];
-
-    return (*node)->move;
-}
