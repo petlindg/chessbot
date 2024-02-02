@@ -6,6 +6,9 @@
 #include "board.h"
 #include "check.h"
 
+//libraries only used for debugging
+#include "interface.h"
+
 void movePiece_Pawn(Piece board[8][8], unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2) {
     Color color = board[x1][y1].color;
     Square sq;
@@ -735,6 +738,7 @@ void getMoves_King(Piece board[8][8],
     Move move;
     move.from = from;
 
+    //adds default king moves
     for(int i=-1; i<2; i++) {
         for(int j=-1; j<2; j++) {
             move.to.x=move.from.x+i;
@@ -746,17 +750,22 @@ void getMoves_King(Piece board[8][8],
             }
         }
     }
+    //adds castling moves
     if(board[move.from.x][move.from.y].canSpecialMove) {
         if(board[0][move.from.y].pieceType==ROOK&&board[0][move.from.y].canSpecialMove) {
             if(board[1][move.from.y].color==NONE &&
                board[2][move.from.y].color==NONE &&
                board[3][move.from.y].color==NONE) {
+                move.to.x=2;
+                move.to.y=move.from.y;
                 maybeAddMove(board, &move, color, moves, index, size);
             }
         }
         if(board[7][move.from.y].pieceType==ROOK&&board[7][move.from.y].canSpecialMove) {
             if(board[5][move.from.y].color==NONE &&
                board[6][move.from.y].color==NONE) {
+                move.to.x=6;
+                move.to.y=move.from.y;
                 maybeAddMove(board, &move, color, moves, index, size);
             }
         }

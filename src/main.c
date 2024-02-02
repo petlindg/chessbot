@@ -1,7 +1,8 @@
 #include "tests.h"
+#include "play.h"
 #include <stdio.h>
 
 
 int main(){
-    test_play_negaMax();
+    play_negaMax();
 }

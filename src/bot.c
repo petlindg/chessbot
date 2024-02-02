@@ -124,7 +124,6 @@ Move negaMax(Piece board[8][8], Color playColor, Color otherColor, int depth) {
     int size = getMoves(board, playColor, &moves);
 
     for(int i=0; i<size; i++) {
-        printf("%dth move...\n", i);
         copyBoard(board, copiedBoard);
         movePiece(copiedBoard, moves[i]);
 

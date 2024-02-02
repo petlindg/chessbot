@@ -155,48 +155,6 @@ void test_initTestBoard(Piece board[8][8]) {
     return;
 }
 
-void test_play_negaMax() {
-    Piece board[8][8];
-    Move* moves;
-    unsigned int size=1, i=0;
-    Color color;
-    Move move;
-    int evalBest, evalCurrent;
-
-    initBoard(board);
-    //test_initTestBoard(board);
-
-    printBoard(board);
-
-    while(size) {
-        moves = malloc(10*sizeof(Move));
-        if(i%2) {
-            color = BLACK;
-            size = getMoves(board, color, &moves);
-            move = negaMax(board, color, WHITE, 5);
-        } else {
-            color = WHITE;
-            size = getMoves(board, color, &moves);
-            move = promptMove(moves, size);
-        }
-
-        if(i>=200||!size) {
-            free(moves);
-            break;
-        }
-
-        movePiece(board, move);
-
-        free(moves);
-        i++;
-        printBoard(board);
-        printMove(move);
-    }
-
-    printf("Amount of moves: %d\n", i);
-    return;
-}
-
 void test_copyBoard() {
     Piece board[8][8];
     initBoard(board);
