@@ -1,6 +1,6 @@
 # chessbot
 
-A simple trial of a chessbot in C
+ Implementation of a chessbot in C
 
 Project intended to learn algorithms by intuition, so I have by choice avoided learning about existing board representations and algorithms.
 
