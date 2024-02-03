@@ -35,3 +35,13 @@ typedef struct MCTSNode {
     struct MCTSNode** children;
     int numberOfChildren;
 } Node;
+
+typedef struct States {
+    Piece board[8][8];
+    Color playColor;
+    Color oppColor;
+    Move* moveList;
+    int moveListSize;
+    int moveCount;
+    Move move;
+} State;

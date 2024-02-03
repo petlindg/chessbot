@@ -4,6 +4,7 @@
 #include "check.h"
 #include "board.h"
 #include "move.h"
+#include "state.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -78,55 +79,47 @@ void play_negaMax() {
 }
 
 void selfPlay_negaMax() {
-    Piece board[8][8];  //matrix to keep track of current board state
-    Move* moves;        //array to keep track of legal moves
-    int size=1;         //keeps track of amount of legal moves to iterate over var moves
-    int moveCount=0;    //keeps track of total amount of half-moves
-    Color playColor;    //current players color
-    Color oppColor;     //current opponents color
-    Move move;          //current move
+    State state;        //main state
+
+    initState(&state);
 
     int depth = 4;      //defines search depth for the negaMax algorithm where depth is number of half-moves
                         //depth 4 takes ~10s to evaluate on my machine, depth 5 takes ~3 minutes
 
-    initBoard(board);   //initializes the board to the default chess board state
-    printBoard(board);
+    printBoard(state.board);
 
     //main game loop
-    while(size) {
-        moves = malloc(10*sizeof(Move));
-        //decides current player
-        if(moveCount%2) {
-            playColor = BLACK;
-            oppColor = WHITE;
-        } else {
-            playColor = WHITE;
-            oppColor = BLACK;
-        }
+    while(state.moveListSize) {
+        state.moveList = malloc(10*sizeof(Move));
+        
         //get all legal moves
-        size = getMoves(board, playColor, &moves);
-        move = negaMax(board, playColor, oppColor, depth);  
+        state.moveListSize = getMoves(state.board, state.playColor, &state.moveList);
+        state.move = negaMax(state.board, state.playColor, state.oppColor, depth);  
 
         //stop game if moveCount is excessive or if there is no legal moves available
-        if(moveCount>=500||!size) {
-            free(moves);
+        if(state.moveCount>=500||!state.moveListSize) {
+            free(state.moveList);
             break;
         }
 
         //applies the var move to the board, updating the state
-        movePiece(board, move);
+        movePiece(state.board, state.move);
 
-        free(moves);
-        moveCount++;
-        printBoard(board);
-        printMove(move);
+        free(state.moveList);
+        state.moveCount++;
+        printBoard(state.board);
+        printMove(state.move);
+
+        Color tmp = state.playColor;
+        state.playColor = state.oppColor;
+        state.oppColor = tmp;
     }
 
     //print post-game stats
     //print winner
-    if(!size) {
-        if(isCheck(board, playColor)) {
-            if(oppColor == BLACK) {
+    if(!state.moveListSize) {
+        if(isCheck(state.board, state.playColor)) {
+            if(state.playColor == WHITE) {
                 printf("Black won.\n");
             } else {
                 printf("White won.\n");
@@ -136,6 +129,6 @@ void selfPlay_negaMax() {
         }
     }
     //print number of half moves
-    printf("Amount of half-moves: %d\n", moveCount);
+    printf("Amount of half-moves: %d\n", state.moveCount);
     return;
 }
