@@ -12,5 +12,6 @@ Project intended to learn algorithms by intuition, so I have by choice avoided l
 - of the chess pieces.
 - Implement a UCI (Universal Chess Interface) interface.
 - Replace current board representation with something more efficient.
+- Implement noise into move algorithms
 
 # Known bugs:

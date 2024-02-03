@@ -4,5 +4,5 @@
 
 
 int main(){
-    play_negaMax();
+    selfPlay_negaMax();
 }
